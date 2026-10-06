@@ -51,7 +51,8 @@ SemVer Calculator.
 
 ### GitHub
 
-Planned. Actions YAML Validator, Dependabot Validator, and Workflow Inspector.
+Ready. Actions YAML Validator, Dependabot Validator, and Workflow Inspector.
+A pasted file stays on this machine.
 
 ## Prerequisites
 

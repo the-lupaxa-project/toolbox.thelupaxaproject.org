@@ -452,17 +452,27 @@ categories:
       GitHub checks workflow and dependency files you paste in. Actions YAML
       Validator checks a GitHub Actions workflow file. Dependabot Validator
       checks a Dependabot config file. Workflow Inspector reads a GitHub
-      Actions workflow and shows how it is put together.
+      Actions workflow and shows how it is put together. A pasted file stays
+      on this machine.
     tools:
       - id: actions-yaml-validator
         title: Actions YAML Validator
         summary: Check a GitHub Actions workflow file.
-        status: planned
+        status: ready
+        actions:
+          - id: check
+            label: Check
       - id: dependabot-validator
         title: Dependabot Validator
         summary: Check a Dependabot config file.
-        status: planned
+        status: ready
+        actions:
+          - id: check
+            label: Check
       - id: workflow-inspector
         title: Workflow Inspector
         summary: Inspect a GitHub Actions workflow file.
-        status: planned
+        status: ready
+        actions:
+          - id: check
+            label: Check

@@ -143,4 +143,9 @@ extra_javascript:
   - assets/javascript/tools/spf-inspector.js
   - assets/javascript/tools/dmarc-inspector.js
   - assets/javascript/tools/dnssec-inspector.js
+  - assets/javascript/vendor/js-yaml.js
+  - assets/javascript/github.js
+  - assets/javascript/tools/actions-yaml-validator.js
+  - assets/javascript/tools/dependabot-validator.js
+  - assets/javascript/tools/workflow-inspector.js
   - assets/javascript/toolbox.js

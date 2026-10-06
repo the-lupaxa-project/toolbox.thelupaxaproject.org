@@ -41,9 +41,9 @@ EXPECTED = [
     ("development", "regex-tester", "Regex Tester", "planned"),
     ("development", "timestamp-converter", "Timestamp Converter", "planned"),
     ("development", "semver-calculator", "SemVer Calculator", "planned"),
-    ("github", "actions-yaml-validator", "Actions YAML Validator", "planned"),
-    ("github", "dependabot-validator", "Dependabot Validator", "planned"),
-    ("github", "workflow-inspector", "Workflow Inspector", "planned"),
+    ("github", "actions-yaml-validator", "Actions YAML Validator", "ready"),
+    ("github", "dependabot-validator", "Dependabot Validator", "ready"),
+    ("github", "workflow-inspector", "Workflow Inspector", "ready"),
 ]
 
 ENCODE_DECODE = (("encode", "Encode"), ("decode", "Decode"))
@@ -188,6 +188,16 @@ def test_actions_and_summaries() -> None:
                 "quad9",
             )
             assert tuple(output.id for output in tool.outputs) == ("result",)
+        elif tool.id in {
+            "actions-yaml-validator",
+            "dependabot-validator",
+            "workflow-inspector",
+        }:
+            assert tuple((action.id, action.label) for action in tool.actions) == (
+                ("check", "Check"),
+            )
+            assert tool.fields == ()
+            assert tool.outputs == ()
         elif tool.status == "planned":
             assert tool.actions == ()
         else:
@@ -249,6 +259,16 @@ def test_extra_javascript_order() -> None:
     dns_indexes = [scripts.index(entry) for entry in dns_ordered]
     assert dns_indexes == sorted(dns_indexes)
     assert dns_indexes[-1] < toolbox
+    github_ordered = [
+        "assets/javascript/vendor/js-yaml.js",
+        "assets/javascript/github.js",
+        "assets/javascript/tools/actions-yaml-validator.js",
+        "assets/javascript/tools/dependabot-validator.js",
+        "assets/javascript/tools/workflow-inspector.js",
+    ]
+    github_indexes = [scripts.index(entry) for entry in github_ordered]
+    assert github_indexes == sorted(github_indexes)
+    assert github_indexes[-1] < toolbox
     hash_generator = scripts.index("assets/javascript/tools/hash-generator.js")
     assert hash_generator < indexes[0]
 

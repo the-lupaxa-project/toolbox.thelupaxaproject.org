@@ -158,6 +158,8 @@ def test_category_pages_describe_the_tools_on_offer() -> None:
                 "Each lookup is sent to the resolver you pick: Cloudflare, "
                 "Google, or Quad9. This site does not store the query." in page
             )
+        if category_id == "github":
+            assert "A pasted file stays on this machine." in page
         assert f'{description.rstrip(chr(10))}\n\n<div class="grid cards" markdown>' in page
         assert "\n\n\n" not in page
         for tool in category_tools:
