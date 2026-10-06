@@ -1,0 +1,139 @@
+site_name: Lupaxa Web Toolbox
+site_description: Browser tools for encoding, cryptography, DNS, data, development, and GitHub.
+site_author: The Lupaxa Project
+site_url: https://toolbox.thelupaxaproject.org/
+
+extra:
+  generator: false
+  # Wide screens list categories in the header. Smaller screens use the menu.
+  hide_primary_sidebar: true
+  # Viewer language picker (client-side translation; English URLs).
+  language_picker: true
+  footer_name: The Lupaxa Project
+  footer_taglines:
+    - Where exploration meets precision.
+    - Where the untamed meets the engineered.
+  # Counter.dev analytics (omit counter_dev_id to disable).
+  counter_dev_id: ef410665-76d4-43fe-9e91-53f26ed1004b
+  counter_dev_utcoffset: 0
+  social_image: assets/images/brand/social-media-card.png
+  social_image_width: 1200
+  social_image_height: 630
+  social_logo: assets/images/brand/logo.png
+  social_locale: en_GB
+  theme_color: "#203959"
+  twitter_card: summary_large_image
+
+docs_dir: mkdocs
+site_dir: site
+use_directory_urls: true
+
+watch:
+  - data
+  - hooks
+  - overrides
+  - src
+  - mkdocs/assets/javascript
+  - mkdocs/assets/stylesheets
+
+theme:
+  name: material
+  custom_dir: overrides
+  font:
+    text: IBM Plex Sans
+    code: IBM Plex Mono
+  language: en
+  logo: assets/images/brand/logo.png
+  favicon: assets/images/brand/favicon.png
+  features:
+    - content.code.copy
+    - content.tooltips
+    - navigation.indexes
+    - navigation.instant
+    - navigation.instant.progress
+    - navigation.top
+    - navigation.sections
+    - toc.follow
+  palette:
+    scheme: slate
+    primary: blue
+    accent: light blue
+  icon:
+    repo: fontawesome/brands/github
+
+hooks:
+  - hooks/tools_pages.py
+  - hooks/asset_cache_bust.py
+
+nav: []
+
+markdown_extensions:
+  - abbr
+  - admonition
+  - attr_list
+  - def_list
+  - footnotes
+  - md_in_html
+  - tables
+  - toc:
+      permalink: false
+      permalink_title: Link to this section
+  - pymdownx.blocks.caption
+  - pymdownx.caret
+  - pymdownx.details
+  - pymdownx.emoji:
+      emoji_index: !!python/name:material.extensions.emoji.twemoji
+      emoji_generator: !!python/name:material.extensions.emoji.to_svg
+  - pymdownx.highlight:
+      anchor_linenums: true
+      line_spans: __span
+      pygments_lang_class: true
+  - pymdownx.inlinehilite
+  - pymdownx.keys
+  - pymdownx.mark
+  - pymdownx.smartsymbols
+  - pymdownx.snippets
+  - pymdownx.superfences
+  - pymdownx.tabbed:
+      alternate_style: true
+  - pymdownx.tasklist:
+      custom_checkbox: true
+  - pymdownx.tilde
+
+extra_css:
+  - assets/stylesheets/00-tokens.css
+  - assets/stylesheets/10-base.css
+  - assets/stylesheets/20-layout.css
+  - assets/stylesheets/30-navigation.css
+  - assets/stylesheets/40-components/buttons.css
+  - assets/stylesheets/40-components/cards.css
+  - assets/stylesheets/40-components/hero.css
+  - assets/stylesheets/40-components/tables.css
+  - assets/stylesheets/40-components/footer.css
+  - assets/stylesheets/40-components/tool.css
+  - assets/stylesheets/90-responsive.css
+  - assets/stylesheets/95-print.css
+  - assets/stylesheets/99-overrides.css
+
+extra_javascript:
+  - assets/javascript/page-lifecycle.js
+  - assets/javascript/language-preference.js
+  - assets/javascript/header-active-nav.js
+  - assets/javascript/tools/base64.js
+  - assets/javascript/tools/url-encode-decode.js
+  - assets/javascript/tools/hex.js
+  - assets/javascript/tools/base-16.js
+  - assets/javascript/tools/base-32.js
+  - assets/javascript/tools/base-58.js
+  - assets/javascript/tools/base-85.js
+  - assets/javascript/tools/binary.js
+  - assets/javascript/tools/octal.js
+  - assets/javascript/tools/jwt-decoder.js
+  - assets/javascript/tools/hash-generator.js
+  - assets/javascript/vendor/pkijs.js
+  - assets/javascript/certificates.js
+  - assets/javascript/tools/certificate-generator.js
+  - assets/javascript/tools/csr-generator.js
+  - assets/javascript/tools/certificate-inspector.js
+  - assets/javascript/tools/pem-der-converter.js
+  - assets/javascript/toolbox.js

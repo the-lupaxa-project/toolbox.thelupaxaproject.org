@@ -1,0 +1,20 @@
+/* =============================================================================
+ * No persistent left nav.
+ *
+ * The header lists the categories on a wide screen. Below Material's
+ * 76.234375em breakpoint the header links hide and this sidebar opens
+ * from the menu button, which 90-responsive.css already styles.
+ * ============================================================================= */
+
+@media screen and (min-width: 76.234376em) {
+  .md-sidebar--primary {
+    display: none;
+  }
+
+  /* The sidebar stays in the page for the small-screen menu. Material still
+     indents the body because the element is not hidden. Keep the body aligned
+     with the header. */
+  [dir="ltr"] .md-sidebar--primary:not([hidden]) ~ .md-content > .md-content__inner {
+    margin-left: auto;
+  }
+}

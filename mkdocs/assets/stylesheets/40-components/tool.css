@@ -1,0 +1,147 @@
+.tool-widget {
+  display: flex;
+  flex-direction: column;
+  gap: var(--lupaxa-spacing-sm);
+  margin-top: 0;
+}
+
+.tool-input,
+.tool-output {
+  width: 100%;
+  min-height: 10rem;
+  font-family: "IBM Plex Mono", monospace;
+  border: 1px solid var(--lupaxa-light-blue);
+  border-radius: var(--lupaxa-radius-sm);
+  background: var(--lupaxa-dark-blue);
+  color: var(--lupaxa-white);
+  padding: var(--lupaxa-spacing-sm);
+}
+
+.tool-actions {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: flex-end;
+  gap: var(--lupaxa-spacing-sm);
+}
+
+.tool-actions button,
+.tool-copy {
+  font-family: "IBM Plex Sans", sans-serif;
+  background: var(--lupaxa-blue);
+  color: var(--lupaxa-white);
+  border: 0;
+  border-radius: var(--lupaxa-radius-button);
+  padding: var(--lupaxa-spacing-sm) var(--lupaxa-spacing-md);
+  cursor: pointer;
+}
+
+.tool-copy {
+  align-self: flex-end;
+}
+
+.tool-actions button:hover,
+.tool-actions button:focus-visible,
+.tool-copy:hover,
+.tool-copy:focus-visible {
+  background: var(--lupaxa-light-blue);
+  color: var(--lupaxa-dark-blue);
+}
+
+.tool-actions button:disabled,
+.tool-copy:disabled {
+  opacity: 0.5;
+  cursor: default;
+}
+
+.tool-actions button:disabled:hover,
+.tool-actions button:disabled:focus-visible,
+.tool-copy:disabled:hover,
+.tool-copy:disabled:focus-visible {
+  background: var(--lupaxa-blue);
+  color: var(--lupaxa-white);
+}
+
+.tool-error {
+  min-height: 1.5rem;
+  margin: 0;
+  color: var(--lupaxa-light-blue);
+}
+
+.tool-field {
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
+}
+
+.tool-field__label {
+  color: var(--md-default-fg-color);
+  font-weight: 650;
+}
+
+.tool-field__control {
+  width: 100%;
+  font-family: "IBM Plex Sans", sans-serif;
+  border: 1px solid var(--lupaxa-light-blue);
+  border-radius: var(--lupaxa-radius-sm);
+  background: var(--lupaxa-dark-blue);
+  color: var(--lupaxa-white);
+  padding: var(--lupaxa-spacing-sm);
+}
+
+.tool-shortcuts {
+  padding-left: 2rem;
+}
+
+.tool-shortcuts__title {
+  margin: 0 0 0.75rem;
+  color: var(--md-default-fg-color);
+  font-size: 1.05rem;
+  font-weight: 700;
+  line-height: 1.3;
+}
+
+.tool-shortcuts__list {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.tool-shortcuts__item + .tool-shortcuts__item {
+  margin-top: 0.15rem;
+}
+
+.tool-shortcuts__link {
+  display: block;
+  padding: 0.2rem 0;
+  color: var(--md-default-fg-color);
+  font-size: 0.8rem;
+  font-weight: 500;
+  line-height: 1.4;
+  text-decoration: none;
+  transition: font-weight var(--lupaxa-transition-fast);
+}
+
+.tool-shortcuts__link:hover,
+.tool-shortcuts__link:focus-visible {
+  color: var(--md-default-fg-color);
+  font-weight: 700;
+}
+
+.tool-shortcuts__link--active,
+.tool-shortcuts__link--active:hover,
+.tool-shortcuts__link--active:focus-visible {
+  color: var(--md-default-fg-color);
+  font-weight: 700;
+  text-decoration: underline;
+  text-decoration-color: var(--lupaxa-light-blue);
+  text-decoration-thickness: 2px;
+  text-underline-offset: 0.12em;
+  text-decoration-skip-ink: auto;
+}
+
+/* Computer layout only. Tablet and mobile keep the header menu. */
+@media screen and (max-width: 76.234375em) {
+  .md-sidebar--secondary:has(.tool-shortcuts) {
+    display: none !important;
+  }
+}

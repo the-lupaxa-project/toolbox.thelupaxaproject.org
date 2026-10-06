@@ -1,0 +1,303 @@
+/* =============================================================================
+ * The Lupaxa Project Portal
+ * Print
+ * ============================================================================= */
+
+.print-page-notice {
+  display: none;
+}
+
+@media print {
+  .md-header,
+  .md-tabs,
+  .md-sidebar,
+  .md-footer,
+  .lupaxa-hero-actions,
+  .about-actions {
+    display: none !important;
+  }
+
+  .md-content__inner {
+    max-width: none;
+    margin: 0;
+    padding: 0;
+  }
+
+  .lupaxa-hero,
+  .lupaxa-error-hero {
+    margin: 0 0 var(--lupaxa-spacing-lg);
+    padding: var(--lupaxa-spacing-lg) 0 var(--lupaxa-spacing-md);
+    background: none;
+    border-bottom: 1px solid #999999;
+  }
+
+  .lupaxa-hero-logo,
+  .lupaxa-hero > img {
+    width: min(100%, 160px);
+    margin-bottom: 0.6rem;
+  }
+
+  .filter-panel {
+    display: none !important;
+  }
+
+  /* Keep the on-screen columns. display:block stacked every card
+     full width, which is the mobile layout and wastes the page. */
+  .md-typeset .grid.cards,
+  .md-typeset .grid.cards.catalogue-grid,
+  .md-typeset .grid.cards.about-summary,
+  .md-typeset .grid.cards.about-principles,
+  .md-typeset .grid.cards.about-build,
+  .md-typeset .grid.cards.sponsor-reasons {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 0.45rem;
+  }
+
+  .md-typeset .grid.cards > ul > li,
+  .md-typeset .grid.cards > li {
+    padding: 0.45rem 0.55rem;
+  }
+
+  .md-typeset .catalogue-grid img.catalogue-logo {
+    max-width: min(100%, 72px);
+  }
+
+  .md-typeset .catalogue-grid > ul > li > p:has(> .catalogue-category),
+  .md-typeset .catalogue-grid > li > p:has(> .catalogue-category) {
+    flex-wrap: nowrap;
+    gap: 0.15rem;
+  }
+
+  .md-typeset .catalogue-category {
+    padding: 0.04rem 0.18rem;
+    font-size: 0.48rem;
+    line-height: 1.2;
+  }
+
+  /* GitHub and documentation buttons cannot be used on paper. */
+  .md-typeset .catalogue-action,
+  .md-typeset .catalogue-grid > ul > li > p:has(.catalogue-action),
+  .md-typeset .catalogue-grid > li > p:has(.catalogue-action),
+  .md-typeset .catalogue-grid > ul > li:has(.catalogue-action) > hr:last-of-type,
+  .md-typeset .catalogue-grid > li:has(.catalogue-action) > hr:last-of-type {
+    display: none;
+  }
+
+  /* Drop the corner sash. Keep its label and version as a line under the title. */
+  .md-typeset .catalogue-grid > ul > li > *,
+  .md-typeset .catalogue-grid > li > * {
+    order: 2;
+  }
+
+  .md-typeset .catalogue-grid > ul > li > h3:first-child,
+  .md-typeset .catalogue-grid > li > h3:first-child,
+  .md-typeset .catalogue-grid > ul > li > p:first-child,
+  .md-typeset .catalogue-grid > li > p:first-child {
+    order: 0;
+    text-align: center;
+  }
+
+  .md-typeset .catalogue-grid > ul > li > h3:first-child .twemoji,
+  .md-typeset .catalogue-grid > li > h3:first-child .twemoji,
+  .md-typeset .catalogue-grid > ul > li > h3:first-child svg,
+  .md-typeset .catalogue-grid > li > h3:first-child svg {
+    display: none;
+  }
+
+  /* Article titles are a paragraph, and the screen rule left-aligns those.
+     Keep them one centered line, like organisation and project headings. */
+  .md-typeset .grid.cards.catalogue-grid.catalogue-grid--articles > ul > li > p:first-child,
+  .md-typeset .grid.cards.catalogue-grid.catalogue-grid--articles > li > p:first-child,
+  .md-typeset .grid.cards.catalogue-grid.catalogue-grid--articles > ul > li > p:first-child strong,
+  .md-typeset .grid.cards.catalogue-grid.catalogue-grid--articles > li > p:first-child strong,
+  .md-typeset .grid.cards.catalogue-grid.catalogue-grid--articles > ul > li > p:first-child a,
+  .md-typeset .grid.cards.catalogue-grid.catalogue-grid--articles > li > p:first-child a {
+    text-align: center;
+    white-space: nowrap;
+    hyphens: manual;
+    font-size: 0.78rem;
+    line-height: 1.25;
+  }
+
+  .md-typeset .catalogue-grid > ul > li > p:has(.catalogue-banner),
+  .md-typeset .catalogue-grid > li > p:has(.catalogue-banner) {
+    display: block;
+    flex: none;
+    order: 1;
+    height: auto;
+    min-height: 0;
+    margin: 0.05rem 0 0;
+    overflow: visible;
+    text-align: center;
+  }
+
+  .md-typeset .catalogue-grid .catalogue-banner,
+  .md-typeset .catalogue-grid .catalogue-banner .catalogue-banner__band {
+    position: static;
+    display: block;
+    width: 100%;
+    height: auto;
+    top: auto;
+    right: auto;
+    overflow: visible;
+    padding: 0;
+    background: none;
+    box-shadow: none;
+    transform: none;
+    text-align: center;
+  }
+
+  .md-typeset .catalogue-grid .catalogue-banner .catalogue-banner__text,
+  .md-typeset .catalogue-grid .catalogue-banner .catalogue-banner__version {
+    display: inline;
+    margin: 0;
+    color: var(--lupaxa-dark-blue);
+    font-size: 0.62rem;
+    font-weight: 700;
+    letter-spacing: 0.04em;
+    line-height: 1.3;
+    white-space: normal;
+  }
+
+  .md-typeset .catalogue-grid .catalogue-banner .catalogue-banner__version {
+    margin-left: 0.35rem;
+  }
+
+  .md-typeset .catalogue-grid > ul > li > hr:first-of-type,
+  .md-typeset .catalogue-grid > li > hr:first-of-type,
+  .md-typeset .grid.cards.catalogue-grid[data-organisation-catalogue] > ul > li > hr:first-of-type,
+  .md-typeset .grid.cards.catalogue-grid[data-organisation-catalogue] > li > hr:first-of-type,
+  .md-typeset .grid.cards.catalogue-grid[data-project-catalogue] > ul > li > hr:first-of-type,
+  .md-typeset .grid.cards.catalogue-grid[data-project-catalogue] > li > hr:first-of-type,
+  .md-typeset .grid.cards.catalogue-grid[data-policy-catalogue] > ul > li > hr:first-of-type,
+  .md-typeset .grid.cards.catalogue-grid[data-policy-catalogue] > li > hr:first-of-type,
+  .md-typeset .grid.cards.catalogue-grid.catalogue-grid--articles > ul > li > hr:first-of-type,
+  .md-typeset .grid.cards.catalogue-grid.catalogue-grid--articles > li > hr:first-of-type {
+    margin-top: 0.2rem;
+  }
+
+  .md-typeset .lupaxa-article-card {
+    padding: 0;
+    background: none;
+    border: 0;
+    border-radius: 0;
+    box-shadow: none;
+  }
+
+  .md-typeset .grid.cards > ul > li,
+  .md-typeset .grid.cards > li,
+  [data-md-color-scheme="slate"] .md-typeset .grid.cards > ul > li,
+  [data-md-color-scheme="slate"] .md-typeset .grid.cards > li,
+  .about-introduction,
+  .about-name {
+    break-inside: avoid;
+    box-shadow: none;
+  }
+
+  .md-typeset a[href]::after {
+    content: " (" attr(href) ")";
+    font-size: 0.85em;
+  }
+
+  .md-typeset a[href^="#"]::after,
+  .md-typeset a[href^="javascript:"]::after,
+  .md-typeset .grid.cards a[href]::after {
+    content: none;
+  }
+
+  /* Humour is absolutely positioned on screen. Flow it as two columns on paper. */
+  .humour-filters,
+  .humour-lightbox {
+    display: none !important;
+  }
+
+  .humour-masonry,
+  .humour-masonry.is-laid-out {
+    display: grid !important;
+    position: static !important;
+    height: auto !important;
+    max-width: none;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 0.45rem;
+  }
+
+  .humour-card {
+    position: static !important;
+    top: auto !important;
+    left: auto !important;
+    width: auto !important;
+    height: auto !important;
+    transform: none !important;
+    break-inside: avoid;
+    overflow: hidden;
+    background: none !important;
+    color: inherit !important;
+    border: 1px solid rgba(0, 0, 0, 0.25);
+    box-shadow: none;
+  }
+
+  .humour-play {
+    display: none;
+  }
+
+  .humour-meta,
+  .humour-comment,
+  .humour-date {
+    background: none !important;
+    color: #1a1a1a !important;
+    opacity: 1;
+  }
+
+  .humour-meta {
+    padding: 0.4rem 0.45rem 0.5rem;
+    border-top: 1px solid rgba(0, 0, 0, 0.15);
+  }
+
+  .humour-date {
+    color: #444444 !important;
+  }
+
+  .no-print-page {
+    display: none !important;
+  }
+
+  .md-typeset .print-page-notice {
+    display: block;
+    max-width: 32rem;
+    margin: 4rem auto 0;
+    padding: 0.9rem 1.1rem 1rem;
+    color: #1a1a1a;
+    text-align: left;
+    border: 1.5px solid #1a1a1a;
+    border-radius: 0.35rem;
+  }
+
+  .md-typeset .print-page-notice__title {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.55rem;
+    margin: 0 0 0.4rem;
+    font-size: 1.05rem;
+    font-weight: 700;
+    line-height: 1.3;
+    text-align: center;
+  }
+
+  .md-typeset .print-page-notice__title svg {
+    width: 1.45rem;
+    height: 1.45rem;
+    flex: none;
+  }
+
+  .md-typeset .print-page-notice p:not(.print-page-notice__title) {
+    margin: 0;
+    font-size: 0.92rem;
+    line-height: 1.45;
+  }
+
+  .md-typeset .print-page-notice p.print-page-notice__online {
+    margin-top: 0.85rem;
+  }
+}

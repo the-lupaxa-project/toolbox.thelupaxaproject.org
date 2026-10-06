@@ -1,0 +1,48 @@
+{#-
+  This file overrides Material for MkDocs' default content partial.
+
+  The automatic fallback H1 has intentionally been removed so that every
+  visible heading and all page content must be supplied by the Markdown page.
+-#}
+
+{% set is_article_page = page and page.file and page.file.src_uri.startswith("articles/") %}
+{% if is_article_page %}
+<div class="lupaxa-article-card">
+{% endif %}
+
+{% include "partials/tags.html" %}
+
+{% include "partials/actions.html" %}
+
+{{ page.content }}
+
+{% if is_article_page %}
+</div>
+{% endif %}
+
+{% if article_prev or article_next %}
+<nav class="lupaxa-article-pager" aria-label="Article pagination">
+  <div class="lupaxa-article-pager__prev">
+    {% if article_prev %}
+    <a class="lupaxa-article-pager__link" href="{{ article_prev.url | url }}">
+      <span class="lupaxa-article-pager__label">Previous article</span>
+      <span class="lupaxa-article-pager__title">{{ article_prev.title }}</span>
+    </a>
+    {% endif %}
+  </div>
+  <div class="lupaxa-article-pager__next">
+    {% if article_next %}
+    <a class="lupaxa-article-pager__link" href="{{ article_next.url | url }}">
+      <span class="lupaxa-article-pager__label">Next article</span>
+      <span class="lupaxa-article-pager__title">{{ article_next.title }}</span>
+    </a>
+    {% endif %}
+  </div>
+</nav>
+{% endif %}
+
+{% include "partials/source-file.html" %}
+
+{% include "partials/feedback.html" %}
+
+{% include "partials/comments.html" %}

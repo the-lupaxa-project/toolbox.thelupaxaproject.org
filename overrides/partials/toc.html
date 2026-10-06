@@ -1,0 +1,47 @@
+{#-
+  Tool pages list the other tools in the same category.
+  Every other page keeps the theme table of contents.
+-#}
+{% if page and page.parent and page.parent.children and not page.is_index %}
+  <nav class="md-nav md-nav--secondary tool-shortcuts" aria-label="{{ page.parent.title }} tools">
+    <div class="tool-shortcuts__title">{{ page.parent.title }} Tools</div>
+    <ul class="tool-shortcuts__list">
+      {% for child in page.parent.children %}
+        {% if child.is_page and not child.is_index %}
+          <li class="tool-shortcuts__item">
+            <a
+              class="tool-shortcuts__link{% if child.active %} tool-shortcuts__link--active{% endif %}"
+              href="{{ child.url | url }}"
+              {% if child.active %}aria-current="page"{% endif %}
+            >
+              {{ child.title }}
+            </a>
+          </li>
+        {% endif %}
+      {% endfor %}
+    </ul>
+  </nav>
+{% else %}
+  {% set title = lang.t("toc") %}
+  {% if config.mdx_configs.toc and config.mdx_configs.toc.title %}
+    {% set title = config.mdx_configs.toc.title %}
+  {% endif %}
+  <nav class="md-nav md-nav--secondary" aria-label="{{ title | e }}">
+    {% set toc = page.toc %}
+    {% set first = toc | first %}
+    {% if first and first.level == 1 %}
+      {% set toc = first.children %}
+    {% endif %}
+    {% if toc %}
+      <label class="md-nav__title" for="__toc">
+        <span class="md-nav__icon md-icon"></span>
+        {{ title }}
+      </label>
+      <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+        {% for toc_item in toc %}
+          {% include "partials/toc-item.html" %}
+        {% endfor %}
+      </ul>
+    {% endif %}
+  </nav>
+{% endif %}

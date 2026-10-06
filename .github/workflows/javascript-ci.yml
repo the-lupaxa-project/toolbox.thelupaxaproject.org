@@ -1,0 +1,57 @@
+name: JavaScript CI
+
+on:
+  push:
+    paths:
+      - ".github/workflows/javascript-ci.yml"
+      - "tests/js/**"
+      - "mkdocs/assets/javascript/**"
+  pull_request:
+    branches:
+      - "master"
+    paths:
+      - ".github/workflows/javascript-ci.yml"
+      - "tests/js/**"
+      - "mkdocs/assets/javascript/**"
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+permissions:
+  actions: read
+  contents: read
+
+jobs:
+  javascript-ci:
+    name: Node Tests
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+
+      - name: Set up Node.js
+        uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020 # v7.0.0
+        with:
+          node-version: "22"
+
+      - name: Run Node tests
+        run: node --test tests/js/*.test.cjs
+
+  generate-workflow-summary:
+    name: Generate Workflow Summary
+    needs:
+      - javascript-ci
+    if: always()
+    uses: the-lupaxa-project/workflows/.github/workflows/reusable-workflow-summary.yml@master
+
+  generate-workflow-notifications:
+    name: Generate Workflow Notifications
+    needs:
+      - generate-workflow-summary
+    if: always()
+    uses: the-lupaxa-project/workflows/.github/workflows/reusable-workflow-notifier.yml@master
+    with:
+      notify_on_results: "failure,timed_out"
+    secrets:
+      slack_webhook_url: ${{ secrets.SLACK_WEBHOOK_URL }}

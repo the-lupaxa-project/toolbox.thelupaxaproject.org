@@ -1,0 +1,317 @@
+categories:
+  - id: encoding
+    title: Encoding
+    description: >
+      Encoding changes text into another form you can paste into a URL, a
+      token, or a file, and changes it back. Base64 encodes and decodes
+      Base64 text. Base 16 encodes and decodes Base 16 text. Base 32 encodes
+      and decodes Base 32 text. Base 58 encodes and decodes Base 58 text.
+      Base 85 encodes and decodes Base 85 text. Binary encodes and decodes
+      binary text. Hexadecimal encodes and decodes hexadecimal text.
+      JWT Decoder reads a token and shows the header, the payload, and the
+      raw signature. It does not check the signature. Octal encodes and
+      decodes octal text. URL Encode/Decode prepares text for a URL component
+      and reads it back.
+    tools:
+      - id: base64
+        title: Base64
+        summary: Encode and decode Base64 text.
+        status: ready
+        actions:
+          - id: encode
+            label: Encode
+          - id: decode
+            label: Decode
+      - id: url-encode-decode
+        title: URL Encode/Decode
+        summary: Encode and decode text for a URL component.
+        status: ready
+        actions:
+          - id: encode
+            label: Encode
+          - id: decode
+            label: Decode
+      - id: hex
+        title: Hexadecimal
+        summary: Encode and decode hexadecimal text.
+        status: ready
+        actions:
+          - id: encode
+            label: Encode
+          - id: decode
+            label: Decode
+      - id: base-16
+        title: Base 16
+        summary: Encode and decode Base 16 text.
+        status: ready
+        actions:
+          - id: encode
+            label: Encode
+          - id: decode
+            label: Decode
+      - id: base-32
+        title: Base 32
+        summary: Encode and decode Base 32 text.
+        status: ready
+        actions:
+          - id: encode
+            label: Encode
+          - id: decode
+            label: Decode
+      - id: base-58
+        title: Base 58
+        summary: Encode and decode Base 58 text.
+        status: ready
+        actions:
+          - id: encode
+            label: Encode
+          - id: decode
+            label: Decode
+      - id: base-85
+        title: Base 85
+        summary: Encode and decode Base 85 text.
+        status: ready
+        actions:
+          - id: encode
+            label: Encode
+          - id: decode
+            label: Decode
+      - id: binary
+        title: Binary
+        summary: Encode and decode binary text.
+        status: ready
+        actions:
+          - id: encode
+            label: Encode
+          - id: decode
+            label: Decode
+      - id: octal
+        title: Octal
+        summary: Encode and decode octal text.
+        status: ready
+        actions:
+          - id: encode
+            label: Encode
+          - id: decode
+            label: Decode
+      - id: jwt-decoder
+        title: JWT Decoder
+        summary: Decode a JWT header and payload.
+        status: ready
+        actions:
+          - id: decode
+            label: Decode
+  - id: cryptography
+    title: Cryptography
+    description: >
+      Cryptography covers hashes and certificates, calculated in the browser.
+      Hash Generator hashes text you paste in. Certificate Generator creates
+      a certificate. CSR Generator creates a certificate signing request.
+      Certificate Inspector reads the fields in a certificate. PEM/DER
+      Converter converts a certificate between PEM and DER.
+    tools:
+      - id: hash-generator
+        title: Hash Generator
+        summary: Generate a hash of text you paste in.
+        status: ready
+        actions:
+          - id: sha-256
+            label: SHA-256
+          - id: sha-384
+            label: SHA-384
+          - id: sha-512
+            label: SHA-512
+      - id: certificate-generator
+        title: Certificate Generator
+        summary: Create a certificate in the browser.
+        status: ready
+        fields:
+          - id: common-name
+            label: Common name
+            kind: text
+          - id: validity-days
+            label: Validity (days)
+            kind: number
+            default: "365"
+          - id: key-type
+            label: Key type
+            kind: choice
+            default: rsa-2048
+            choices:
+              - id: rsa-2048
+                label: RSA 2048
+              - id: rsa-3072
+                label: RSA 3072
+              - id: rsa-4096
+                label: RSA 4096
+              - id: ecdsa-p256
+                label: ECDSA P-256
+              - id: ecdsa-p384
+                label: ECDSA P-384
+        actions:
+          - id: generate
+            label: Generate
+        outputs:
+          - id: csr
+            label: Certificate request
+          - id: certificate
+            label: Certificate
+          - id: private-key
+            label: Private key
+      - id: csr-generator
+        title: CSR Generator
+        summary: Create a certificate signing request in the browser.
+        status: ready
+        fields:
+          - id: common-name
+            label: Common name
+            kind: text
+          - id: key-type
+            label: Key type
+            kind: choice
+            default: rsa-2048
+            choices:
+              - id: rsa-2048
+                label: RSA 2048
+              - id: rsa-3072
+                label: RSA 3072
+              - id: rsa-4096
+                label: RSA 4096
+              - id: ecdsa-p256
+                label: ECDSA P-256
+              - id: ecdsa-p384
+                label: ECDSA P-384
+        actions:
+          - id: generate
+            label: Generate
+        outputs:
+          - id: csr
+            label: Certificate request
+          - id: private-key
+            label: Private key
+      - id: certificate-inspector
+        title: Certificate Inspector
+        summary: Read the fields in a certificate you paste in.
+        status: ready
+        actions:
+          - id: inspect
+            label: Inspect
+      - id: pem-der-converter
+        title: PEM/DER Converter
+        summary: Convert a certificate between PEM and DER.
+        status: ready
+        actions:
+          - id: to-der
+            label: To DER
+          - id: to-pem
+            label: To PEM
+  - id: dns
+    title: DNS
+    description: >
+      DNS looks up names, addresses, and mail policy for a domain. DNS Lookup
+      reads the records for a name. Reverse DNS finds the name for an IP
+      address. MX Lookup lists the mail servers for a domain. SPF Inspector
+      reads a domain's SPF record. DMARC Inspector reads a domain's DMARC
+      record. DNSSEC Inspector checks DNSSEC for a domain.
+    tools:
+      - id: dns-lookup
+        title: DNS Lookup
+        summary: Look up DNS records for a name.
+        status: planned
+      - id: reverse-dns
+        title: Reverse DNS
+        summary: Look up the name for an IP address.
+        status: planned
+      - id: mx-lookup
+        title: MX Lookup
+        summary: Look up mail servers for a domain.
+        status: planned
+      - id: spf-inspector
+        title: SPF Inspector
+        summary: Read a domain's SPF record.
+        status: planned
+      - id: dmarc-inspector
+        title: DMARC Inspector
+        summary: Read a domain's DMARC record.
+        status: planned
+      - id: dnssec-inspector
+        title: DNSSEC Inspector
+        summary: Check DNSSEC for a domain.
+        status: planned
+  - id: data
+    title: Data
+    description: >
+      Data formats structured text and converts it between common formats.
+      JSON Formatter, YAML Formatter, and XML Formatter tidy the text you
+      paste in. JSON ↔ YAML converts JSON to YAML and YAML to JSON. CSV ↔
+      JSON converts CSV to JSON and JSON to CSV.
+    tools:
+      - id: json-formatter
+        title: JSON Formatter
+        summary: Format JSON text.
+        status: planned
+      - id: yaml-formatter
+        title: YAML Formatter
+        summary: Format YAML text.
+        status: planned
+      - id: json-yaml
+        title: "JSON ↔ YAML"
+        summary: Convert JSON to YAML and YAML to JSON.
+        status: planned
+      - id: csv-json
+        title: "CSV ↔ JSON"
+        summary: Convert CSV to JSON and JSON to CSV.
+        status: planned
+      - id: xml-formatter
+        title: XML Formatter
+        summary: Format XML text.
+        status: planned
+  - id: development
+    title: Development
+    description: >
+      Development covers everyday helpers for identifiers, schedules, and
+      versions. UUID Generator creates a UUID. Cron Parser explains a cron
+      expression. Regex Tester tries a regular expression against text.
+      Timestamp Converter converts between timestamps and calendar dates.
+      SemVer Calculator compares semantic versions and steps them.
+    tools:
+      - id: uuid-generator
+        title: UUID Generator
+        summary: Generate a UUID.
+        status: planned
+      - id: cron-parser
+        title: Cron Parser
+        summary: Explain a cron expression.
+        status: planned
+      - id: regex-tester
+        title: Regex Tester
+        summary: Try a regular expression against text.
+        status: planned
+      - id: timestamp-converter
+        title: Timestamp Converter
+        summary: Convert between timestamps and calendar dates.
+        status: planned
+      - id: semver-calculator
+        title: SemVer Calculator
+        summary: Compare and step semantic versions.
+        status: planned
+  - id: github
+    title: GitHub
+    description: >
+      GitHub checks workflow and dependency files you paste in. Actions YAML
+      Validator checks a GitHub Actions workflow file. Dependabot Validator
+      checks a Dependabot config file. Workflow Inspector reads a GitHub
+      Actions workflow and shows how it is put together.
+    tools:
+      - id: actions-yaml-validator
+        title: Actions YAML Validator
+        summary: Check a GitHub Actions workflow file.
+        status: planned
+      - id: dependabot-validator
+        title: Dependabot Validator
+        summary: Check a Dependabot config file.
+        status: planned
+      - id: workflow-inspector
+        title: Workflow Inspector
+        summary: Inspect a GitHub Actions workflow file.
+        status: planned

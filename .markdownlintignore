@@ -1,0 +1,7 @@
+# Generated / local-only — not part of the published site
+site/
+cursor-docs/
+.venv/
+.makefiles/
+.superpowers/
+.pytest_cache/
