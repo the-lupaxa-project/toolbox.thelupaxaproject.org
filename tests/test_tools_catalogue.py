@@ -31,11 +31,12 @@ EXPECTED = [
     ("dns", "spf-inspector", "SPF Inspector", "ready"),
     ("dns", "dmarc-inspector", "DMARC Inspector", "ready"),
     ("dns", "dnssec-inspector", "DNSSEC Inspector", "ready"),
-    ("data", "json-formatter", "JSON Formatter", "planned"),
-    ("data", "yaml-formatter", "YAML Formatter", "planned"),
-    ("data", "json-yaml", "JSON ↔ YAML", "planned"),
-    ("data", "csv-json", "CSV ↔ JSON", "planned"),
-    ("data", "xml-formatter", "XML Formatter", "planned"),
+    ("data", "json-formatter", "JSON Formatter", "ready"),
+    ("data", "yaml-formatter", "YAML Formatter", "ready"),
+    ("data", "json-yaml", "JSON ↔ YAML", "ready"),
+    ("data", "csv-json", "CSV ↔ JSON", "ready"),
+    ("data", "csv-yaml", "CSV ↔ YAML", "ready"),
+    ("data", "xml-formatter", "XML Formatter", "ready"),
     ("development", "uuid-generator", "UUID Generator", "planned"),
     ("development", "cron-parser", "Cron Parser", "planned"),
     ("development", "regex-tester", "Regex Tester", "planned"),
@@ -198,6 +199,34 @@ def test_actions_and_summaries() -> None:
             )
             assert tool.fields == ()
             assert tool.outputs == ()
+        elif tool.id in {"json-formatter", "yaml-formatter", "xml-formatter"}:
+            assert tuple((action.id, action.label) for action in tool.actions) == (
+                ("format", "Format"),
+                ("minify", "Minify"),
+            )
+            assert tool.fields == ()
+            assert tool.outputs == ()
+        elif tool.id == "json-yaml":
+            assert tuple((action.id, action.label) for action in tool.actions) == (
+                ("to-yaml", "To YAML"),
+                ("to-json", "To JSON"),
+            )
+            assert tool.fields == ()
+            assert tool.outputs == ()
+        elif tool.id == "csv-json":
+            assert tuple((action.id, action.label) for action in tool.actions) == (
+                ("to-json", "To JSON"),
+                ("to-csv", "To CSV"),
+            )
+            assert tool.fields == ()
+            assert tool.outputs == ()
+        elif tool.id == "csv-yaml":
+            assert tuple((action.id, action.label) for action in tool.actions) == (
+                ("to-yaml", "To YAML"),
+                ("to-csv", "To CSV"),
+            )
+            assert tool.fields == ()
+            assert tool.outputs == ()
         elif tool.status == "planned":
             assert tool.actions == ()
         else:
@@ -269,6 +298,19 @@ def test_extra_javascript_order() -> None:
     github_indexes = [scripts.index(entry) for entry in github_ordered]
     assert github_indexes == sorted(github_indexes)
     assert github_indexes[-1] < toolbox
+    data_ordered = [
+        "assets/javascript/data.js",
+        "assets/javascript/tools/json-formatter.js",
+        "assets/javascript/tools/yaml-formatter.js",
+        "assets/javascript/tools/json-yaml.js",
+        "assets/javascript/tools/csv-json.js",
+        "assets/javascript/tools/csv-yaml.js",
+        "assets/javascript/tools/xml-formatter.js",
+    ]
+    data_indexes = [scripts.index(entry) for entry in data_ordered]
+    assert data_indexes == sorted(data_indexes)
+    assert github_indexes[-1] < data_indexes[0]
+    assert data_indexes[-1] < toolbox
     hash_generator = scripts.index("assets/javascript/tools/hash-generator.js")
     assert hash_generator < indexes[0]
 

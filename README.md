@@ -41,8 +41,8 @@ Google, or Quad9.
 
 ### Data
 
-Planned. JSON Formatter, YAML Formatter, XML Formatter, JSON ↔ YAML, and
-CSV ↔ JSON.
+Ready. JSON Formatter, YAML Formatter, XML Formatter, JSON ↔ YAML,
+CSV ↔ JSON, and CSV ↔ YAML. A pasted file stays on this machine.
 
 ### Development
 

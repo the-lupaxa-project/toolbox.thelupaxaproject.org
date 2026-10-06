@@ -393,30 +393,65 @@ categories:
     title: Data
     description: >
       Data formats structured text and converts it between common formats.
-      JSON Formatter, YAML Formatter, and XML Formatter tidy the text you
-      paste in. JSON ↔ YAML converts JSON to YAML and YAML to JSON. CSV ↔
-      JSON converts CSV to JSON and JSON to CSV.
+      JSON Formatter, YAML Formatter, and XML Formatter format or minify the
+      text you paste in. JSON ↔ YAML converts JSON to YAML and YAML to JSON.
+      CSV ↔ JSON converts CSV to JSON and JSON to CSV. CSV ↔ YAML converts
+      CSV to YAML and YAML to CSV. A pasted file stays on this machine.
     tools:
       - id: json-formatter
         title: JSON Formatter
         summary: Format JSON text.
-        status: planned
+        status: ready
+        actions:
+          - id: format
+            label: Format
+          - id: minify
+            label: Minify
       - id: yaml-formatter
         title: YAML Formatter
         summary: Format YAML text.
-        status: planned
+        status: ready
+        actions:
+          - id: format
+            label: Format
+          - id: minify
+            label: Minify
       - id: json-yaml
         title: "JSON ↔ YAML"
         summary: Convert JSON to YAML and YAML to JSON.
-        status: planned
+        status: ready
+        actions:
+          - id: to-yaml
+            label: To YAML
+          - id: to-json
+            label: To JSON
       - id: csv-json
         title: "CSV ↔ JSON"
         summary: Convert CSV to JSON and JSON to CSV.
-        status: planned
+        status: ready
+        actions:
+          - id: to-json
+            label: To JSON
+          - id: to-csv
+            label: To CSV
+      - id: csv-yaml
+        title: "CSV ↔ YAML"
+        summary: Convert CSV to YAML and YAML to CSV.
+        status: ready
+        actions:
+          - id: to-yaml
+            label: To YAML
+          - id: to-csv
+            label: To CSV
       - id: xml-formatter
         title: XML Formatter
         summary: Format XML text.
-        status: planned
+        status: ready
+        actions:
+          - id: format
+            label: Format
+          - id: minify
+            label: Minify
   - id: development
     title: Development
     description: >

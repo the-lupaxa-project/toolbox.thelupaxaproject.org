@@ -160,6 +160,9 @@ def test_category_pages_describe_the_tools_on_offer() -> None:
             )
         if category_id == "github":
             assert "A pasted file stays on this machine." in page
+        if category_id == "data":
+            assert "A pasted file stays on this machine." in page
+            assert "CSV ↔ YAML" in page
         assert f'{description.rstrip(chr(10))}\n\n<div class="grid cards" markdown>' in page
         assert "\n\n\n" not in page
         for tool in category_tools:
@@ -320,9 +323,16 @@ def test_strict_build_contains_widget_and_planned_sentence() -> None:
     assert 'value="cloudflare"' in dns_html
     assert "This tool is not available yet." not in dns_html
 
-    planned = ROOT / "site" / "data" / "json-formatter" / "index.html"
+    planned = ROOT / "site" / "development" / "uuid-generator" / "index.html"
     assert planned.is_file()
     assert "This tool is not available yet." in planned.read_text(encoding="utf-8")
+
+    ready = ROOT / "site" / "data" / "json-formatter" / "index.html"
+    ready_html = ready.read_text(encoding="utf-8")
+    assert 'data-tool="json-formatter"' in ready_html
+    assert 'data-action="format"' in ready_html
+    assert 'data-action="minify"' in ready_html
+    assert "This tool is not available yet." not in ready_html
 
     home = (ROOT / "site" / "index.html").read_text(encoding="utf-8")
     assert 'href="encoding/"' in home

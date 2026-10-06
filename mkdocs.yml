@@ -148,4 +148,11 @@ extra_javascript:
   - assets/javascript/tools/actions-yaml-validator.js
   - assets/javascript/tools/dependabot-validator.js
   - assets/javascript/tools/workflow-inspector.js
+  - assets/javascript/data.js
+  - assets/javascript/tools/json-formatter.js
+  - assets/javascript/tools/yaml-formatter.js
+  - assets/javascript/tools/json-yaml.js
+  - assets/javascript/tools/csv-json.js
+  - assets/javascript/tools/csv-yaml.js
+  - assets/javascript/tools/xml-formatter.js
   - assets/javascript/toolbox.js
