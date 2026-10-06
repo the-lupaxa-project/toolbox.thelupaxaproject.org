@@ -8,8 +8,7 @@
 
 Browser tools for encoding, cryptography, DNS, data, development, and GitHub.
 Each ready tool runs in the page you have open. Paste text, a certificate, or
-any other input, and the page writes the result back here. Nothing you paste
-is uploaded or stored on a server.
+any other input, and the page writes the result back here. Encoding, cryptography, and the other tools keep that text on this machine. A DNS lookup sends the name or address to the resolver you pick.
 
 The site is published at <https://toolbox.thelupaxaproject.org/>.
 
@@ -36,8 +35,9 @@ certificates, signing requests, and keys are created in the browser.
 
 ### DNS
 
-Planned. DNS Lookup, Reverse DNS, MX Lookup, SPF Inspector, DMARC Inspector,
-and DNSSEC Inspector.
+Ready. DNS Lookup, Reverse DNS, MX Lookup, SPF Inspector, DMARC Inspector,
+and DNSSEC Inspector. A lookup is sent to the resolver you pick: Cloudflare,
+Google, or Quad9.
 
 ### Data
 

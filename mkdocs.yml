@@ -136,4 +136,11 @@ extra_javascript:
   - assets/javascript/tools/csr-generator.js
   - assets/javascript/tools/certificate-inspector.js
   - assets/javascript/tools/pem-der-converter.js
+  - assets/javascript/dns.js
+  - assets/javascript/tools/dns-lookup.js
+  - assets/javascript/tools/reverse-dns.js
+  - assets/javascript/tools/mx-lookup.js
+  - assets/javascript/tools/spf-inspector.js
+  - assets/javascript/tools/dmarc-inspector.js
+  - assets/javascript/tools/dnssec-inspector.js
   - assets/javascript/toolbox.js

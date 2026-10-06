@@ -128,7 +128,11 @@ def test_render_home_links_to_six_category_pages() -> None:
     body = page.index("Every tool on this site", title)
     assert title < rule < body
     assert "In Your Browser" in page
-    assert "Nothing you paste is uploaded or stored on a server" in page
+    assert "Nothing you paste into those tools is uploaded or stored on a server" in page
+    assert (
+        "A DNS lookup sends the name or address to the resolver you pick "
+        "(Cloudflare, Google, or Quad9). This site does not store that query." in page
+    )
     assert "keys, tokens, and other private material remain under your control." in page
     assert "lupaxa-landing-grid" in page
     assert page.count("**[") == 6
@@ -149,6 +153,11 @@ def test_category_pages_describe_the_tools_on_offer() -> None:
         seen.add(description)
         assert description in page
         assert page.index(description) < page.index('<div class="grid cards"')
+        if category_id == "dns":
+            assert (
+                "Each lookup is sent to the resolver you pick: Cloudflare, "
+                "Google, or Quad9. This site does not store the query." in page
+            )
         assert f'{description.rstrip(chr(10))}\n\n<div class="grid cards" markdown>' in page
         assert "\n\n\n" not in page
         for tool in category_tools:
@@ -162,11 +171,11 @@ def test_build_nav_is_home_plus_six_sections() -> None:
     nav = build_nav(load_catalogue(CATALOGUE))
     assert [next(iter(item)) for item in nav] == [
         "Home",
-        "Encoding",
         "Cryptography",
-        "DNS",
         "Data",
         "Development",
+        "DNS",
+        "Encoding",
         "GitHub",
     ]
     assert nav[0] == {"Home": "index.md"}
@@ -174,8 +183,9 @@ def test_build_nav_is_home_plus_six_sections() -> None:
         children = next(iter(item.values()))
         tool_titles = [next(iter(child)) for child in children[1:]]
         assert tool_titles == sorted(tool_titles, key=str.casefold)
-    assert nav[1]["Encoding"][0] == {"Encoding": "encoding/index.md"}
-    assert [next(iter(child)) for child in nav[1]["Encoding"][1:]] == [
+    encoding = next(item["Encoding"] for item in nav if "Encoding" in item)
+    assert encoding[0] == {"Encoding": "encoding/index.md"}
+    assert [next(iter(child)) for child in encoding[1:]] == [
         "Base 16",
         "Base 32",
         "Base 58",
@@ -300,7 +310,15 @@ def test_strict_build_contains_widget_and_planned_sentence() -> None:
     assert "tool-input" in pem_html
     assert 'data-tool="pem-der-converter"' in pem_html
 
-    planned = ROOT / "site" / "dns" / "dns-lookup" / "index.html"
+    dns_lookup = ROOT / "site" / "dns" / "dns-lookup" / "index.html"
+    assert dns_lookup.is_file()
+    dns_html = dns_lookup.read_text(encoding="utf-8")
+    assert 'data-tool="dns-lookup"' in dns_html
+    assert 'data-field="record-type"' in dns_html
+    assert 'value="cloudflare"' in dns_html
+    assert "This tool is not available yet." not in dns_html
+
+    planned = ROOT / "site" / "data" / "json-formatter" / "index.html"
     assert planned.is_file()
     assert "This tool is not available yet." in planned.read_text(encoding="utf-8")
 

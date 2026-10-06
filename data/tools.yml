@@ -212,32 +212,183 @@ categories:
       reads the records for a name. Reverse DNS finds the name for an IP
       address. MX Lookup lists the mail servers for a domain. SPF Inspector
       reads a domain's SPF record. DMARC Inspector reads a domain's DMARC
-      record. DNSSEC Inspector checks DNSSEC for a domain.
+      record. DNSSEC Inspector checks DNSSEC for a domain. Each lookup
+      is sent to the resolver you pick: Cloudflare, Google, or Quad9. This
+      site does not store the query.
     tools:
       - id: dns-lookup
         title: DNS Lookup
         summary: Look up DNS records for a name.
-        status: planned
+        status: ready
+        fields:
+          - id: name
+            label: Name
+            kind: text
+          - id: resolver
+            label: Resolver
+            kind: choice
+            default: cloudflare
+            choices:
+              - id: cloudflare
+                label: Cloudflare
+              - id: google
+                label: Google
+              - id: quad9
+                label: Quad9
+          - id: record-type
+            label: Record type
+            kind: choice
+            default: a
+            choices:
+              - id: a
+                label: A
+              - id: aaaa
+                label: AAAA
+              - id: cname
+                label: CNAME
+              - id: mx
+                label: MX
+              - id: ns
+                label: NS
+              - id: txt
+                label: TXT
+              - id: soa
+                label: SOA
+              - id: caa
+                label: CAA
+              - id: srv
+                label: SRV
+        actions:
+          - id: look-up
+            label: Look Up
+        outputs:
+          - id: result
+            label: Result
       - id: reverse-dns
         title: Reverse DNS
         summary: Look up the name for an IP address.
-        status: planned
+        status: ready
+        fields:
+          - id: name
+            label: Address
+            kind: text
+          - id: resolver
+            label: Resolver
+            kind: choice
+            default: cloudflare
+            choices:
+              - id: cloudflare
+                label: Cloudflare
+              - id: google
+                label: Google
+              - id: quad9
+                label: Quad9
+        actions:
+          - id: look-up
+            label: Look Up
+        outputs:
+          - id: result
+            label: Result
       - id: mx-lookup
         title: MX Lookup
         summary: Look up mail servers for a domain.
-        status: planned
+        status: ready
+        fields:
+          - id: name
+            label: Name
+            kind: text
+          - id: resolver
+            label: Resolver
+            kind: choice
+            default: cloudflare
+            choices:
+              - id: cloudflare
+                label: Cloudflare
+              - id: google
+                label: Google
+              - id: quad9
+                label: Quad9
+        actions:
+          - id: look-up
+            label: Look Up
+        outputs:
+          - id: result
+            label: Result
       - id: spf-inspector
         title: SPF Inspector
         summary: Read a domain's SPF record.
-        status: planned
+        status: ready
+        fields:
+          - id: name
+            label: Name
+            kind: text
+          - id: resolver
+            label: Resolver
+            kind: choice
+            default: cloudflare
+            choices:
+              - id: cloudflare
+                label: Cloudflare
+              - id: google
+                label: Google
+              - id: quad9
+                label: Quad9
+        actions:
+          - id: look-up
+            label: Look Up
+        outputs:
+          - id: result
+            label: Result
       - id: dmarc-inspector
         title: DMARC Inspector
         summary: Read a domain's DMARC record.
-        status: planned
+        status: ready
+        fields:
+          - id: name
+            label: Name
+            kind: text
+          - id: resolver
+            label: Resolver
+            kind: choice
+            default: cloudflare
+            choices:
+              - id: cloudflare
+                label: Cloudflare
+              - id: google
+                label: Google
+              - id: quad9
+                label: Quad9
+        actions:
+          - id: look-up
+            label: Look Up
+        outputs:
+          - id: result
+            label: Result
       - id: dnssec-inspector
         title: DNSSEC Inspector
         summary: Check DNSSEC for a domain.
-        status: planned
+        status: ready
+        fields:
+          - id: name
+            label: Name
+            kind: text
+          - id: resolver
+            label: Resolver
+            kind: choice
+            default: cloudflare
+            choices:
+              - id: cloudflare
+                label: Cloudflare
+              - id: google
+                label: Google
+              - id: quad9
+                label: Quad9
+        actions:
+          - id: look-up
+            label: Look Up
+        outputs:
+          - id: result
+            label: Result
   - id: data
     title: Data
     description: >

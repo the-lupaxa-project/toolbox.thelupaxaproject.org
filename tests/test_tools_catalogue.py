@@ -25,12 +25,12 @@ EXPECTED = [
     ("cryptography", "csr-generator", "CSR Generator", "ready"),
     ("cryptography", "certificate-inspector", "Certificate Inspector", "ready"),
     ("cryptography", "pem-der-converter", "PEM/DER Converter", "ready"),
-    ("dns", "dns-lookup", "DNS Lookup", "planned"),
-    ("dns", "reverse-dns", "Reverse DNS", "planned"),
-    ("dns", "mx-lookup", "MX Lookup", "planned"),
-    ("dns", "spf-inspector", "SPF Inspector", "planned"),
-    ("dns", "dmarc-inspector", "DMARC Inspector", "planned"),
-    ("dns", "dnssec-inspector", "DNSSEC Inspector", "planned"),
+    ("dns", "dns-lookup", "DNS Lookup", "ready"),
+    ("dns", "reverse-dns", "Reverse DNS", "ready"),
+    ("dns", "mx-lookup", "MX Lookup", "ready"),
+    ("dns", "spf-inspector", "SPF Inspector", "ready"),
+    ("dns", "dmarc-inspector", "DMARC Inspector", "ready"),
+    ("dns", "dnssec-inspector", "DNSSEC Inspector", "ready"),
     ("data", "json-formatter", "JSON Formatter", "planned"),
     ("data", "yaml-formatter", "YAML Formatter", "planned"),
     ("data", "json-yaml", "JSON ↔ YAML", "planned"),
@@ -129,6 +129,65 @@ def test_actions_and_summaries() -> None:
                 ("to-pem", "To PEM"),
             )
             assert tool.fields == ()
+        elif tool.id == "dns-lookup":
+            assert tuple((action.id, action.label) for action in tool.actions) == (
+                ("look-up", "Look Up"),
+            )
+            assert tuple(field.id for field in tool.fields) == ("name", "resolver", "record-type")
+            resolver = next(field for field in tool.fields if field.id == "resolver")
+            assert resolver.default == "cloudflare"
+            assert tuple(choice.id for choice in resolver.choices) == (
+                "cloudflare",
+                "google",
+                "quad9",
+            )
+            record_type = next(field for field in tool.fields if field.id == "record-type")
+            assert record_type.default == "a"
+            assert tuple(choice.id for choice in record_type.choices) == (
+                "a",
+                "aaaa",
+                "cname",
+                "mx",
+                "ns",
+                "txt",
+                "soa",
+                "caa",
+                "srv",
+            )
+            assert tuple(output.id for output in tool.outputs) == ("result",)
+        elif tool.id == "reverse-dns":
+            assert tuple((action.id, action.label) for action in tool.actions) == (
+                ("look-up", "Look Up"),
+            )
+            assert tuple(field.id for field in tool.fields) == ("name", "resolver")
+            name = next(field for field in tool.fields if field.id == "name")
+            assert name.label == "Address"
+            resolver = next(field for field in tool.fields if field.id == "resolver")
+            assert resolver.default == "cloudflare"
+            assert tuple(choice.id for choice in resolver.choices) == (
+                "cloudflare",
+                "google",
+                "quad9",
+            )
+            assert tuple(output.id for output in tool.outputs) == ("result",)
+        elif (
+            tool.id == "mx-lookup"
+            or tool.id == "spf-inspector"
+            or tool.id == "dmarc-inspector"
+            or tool.id == "dnssec-inspector"
+        ):
+            assert tuple((action.id, action.label) for action in tool.actions) == (
+                ("look-up", "Look Up"),
+            )
+            assert tuple(field.id for field in tool.fields) == ("name", "resolver")
+            resolver = next(field for field in tool.fields if field.id == "resolver")
+            assert resolver.default == "cloudflare"
+            assert tuple(choice.id for choice in resolver.choices) == (
+                "cloudflare",
+                "google",
+                "quad9",
+            )
+            assert tuple(output.id for output in tool.outputs) == ("result",)
         elif tool.status == "planned":
             assert tool.actions == ()
         else:
@@ -177,6 +236,19 @@ def test_extra_javascript_order() -> None:
     assert indexes == sorted(indexes)
     toolbox = scripts.index("assets/javascript/toolbox.js")
     assert all(index < toolbox for index in indexes)
+
+    dns_ordered = [
+        "assets/javascript/dns.js",
+        "assets/javascript/tools/dns-lookup.js",
+        "assets/javascript/tools/reverse-dns.js",
+        "assets/javascript/tools/mx-lookup.js",
+        "assets/javascript/tools/spf-inspector.js",
+        "assets/javascript/tools/dmarc-inspector.js",
+        "assets/javascript/tools/dnssec-inspector.js",
+    ]
+    dns_indexes = [scripts.index(entry) for entry in dns_ordered]
+    assert dns_indexes == sorted(dns_indexes)
+    assert dns_indexes[-1] < toolbox
     hash_generator = scripts.index("assets/javascript/tools/hash-generator.js")
     assert hash_generator < indexes[0]
 

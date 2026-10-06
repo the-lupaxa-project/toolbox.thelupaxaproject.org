@@ -372,9 +372,12 @@ def render_home(tools: tuple[Tool, ...]) -> str:
         "    <p>Every tool on this site runs in the page you have open."
         + " Paste text for encoding, a hash, a certificate, or any other"
         + " tool, and the page reads it and writes the result back here."
-        + " Your text stays on this machine. Nothing you paste is uploaded"
-        + " or stored on a server, so keys, tokens, and other private"
-        + " material remain under your control.</p>",
+        + " Encoding, hashes, certificates, and the other tools keep that"
+        + " text on this machine. Nothing you paste into those tools is"
+        + " uploaded or stored on a server, so keys, tokens, and other"
+        + " private material remain under your control. A DNS lookup sends"
+        + " the name or address to the resolver you pick (Cloudflare,"
+        + " Google, or Quad9). This site does not store that query.</p>",
         "</aside>",
         "",
         '<div class="grid cards lupaxa-landing-grid" markdown>',
@@ -431,10 +434,13 @@ def _tool_list(category_tools: list[Tool]) -> str:
 
 def build_nav(tools: tuple[Tool, ...]) -> list[Any]:
     nav: list[Any] = [{"Home": "index.md"}]
+    sections: list[dict[str, list[dict[str, str]]]] = []
     for category_id, category_title, category_tools in _categories(tools):
         children = [{category_title: f"{category_id}/index.md"}]
         children.extend({tool.title: f"{category_id}/{tool.id}.md"} for tool in category_tools)
-        nav.append({category_title: children})
+        sections.append({category_title: children})
+    sections.sort(key=lambda item: next(iter(item)).casefold())
+    nav.extend(sections)
     return nav
 
 
