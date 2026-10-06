@@ -362,19 +362,19 @@ def render_home(tools: tuple[Tool, ...]) -> str:
         '        translate="no"/>',
         '    <h1 class="lupaxa-hero-title" translate="no">Lupaxa Web Toolbox</h1>',
         '    <p class="lupaxa-hero-subtitle">'
-        "Browser tools for encoding, cryptography, DNS, data, development, and GitHub."
-        "</p>",
+        + "Browser tools for encoding, cryptography, DNS, data, development, and GitHub."
+        + "</p>",
         "</div>",
         "",
         '<aside class="lupaxa-privacy-note">',
         '    <p class="lupaxa-privacy-note__title">In Your Browser</p>',
         "    <hr>",
         "    <p>Every tool on this site runs in the page you have open."
-        " Paste text for encoding, a hash, a certificate, or any other"
-        " tool, and the page reads it and writes the result back here."
-        " Your text stays on this machine. Nothing you paste is uploaded"
-        " or stored on a server, so keys, tokens, and other private"
-        " material remain under your control.</p>",
+        + " Paste text for encoding, a hash, a certificate, or any other"
+        + " tool, and the page reads it and writes the result back here."
+        + " Your text stays on this machine. Nothing you paste is uploaded"
+        + " or stored on a server, so keys, tokens, and other private"
+        + " material remain under your control.</p>",
         "</aside>",
         "",
         '<div class="grid cards lupaxa-landing-grid" markdown>',
@@ -399,7 +399,7 @@ def render_category_page(category_title: str, category_tools: list[Tool]) -> str
         "",
         f"# {category_title}",
         "",
-        category_tools[0].category_description,
+        category_tools[0].category_description.rstrip("\n"),
         "",
         '<div class="grid cards" markdown>',
         "",

@@ -149,6 +149,8 @@ def test_category_pages_describe_the_tools_on_offer() -> None:
         seen.add(description)
         assert description in page
         assert page.index(description) < page.index('<div class="grid cards"')
+        assert f'{description.rstrip(chr(10))}\n\n<div class="grid cards" markdown>' in page
+        assert "\n\n\n" not in page
         for tool in category_tools:
             assert tool.title in description
         titles = sorted((tool.title for tool in category_tools), key=str.casefold)
