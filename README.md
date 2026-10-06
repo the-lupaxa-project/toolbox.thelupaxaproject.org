@@ -23,9 +23,9 @@ catalogue and say they are not available yet.
 
 ### Encoding
 
-Ready. Base64, URL Encode/Decode, Hexadecimal, Base 16, Base 32, Base 58,
-Base 85, Binary, Octal, and JWT Decoder. JWT Decoder shows the header, the
-payload, and the raw signature. It does not check the signature.
+Ready. Base N, URL Encode/Decode, Hexadecimal, Binary, Octal, and JWT
+Decoder. JWT Decoder shows the header, the payload, and the raw
+signature. It does not check the signature.
 
 ### Cryptography
 
@@ -46,8 +46,8 @@ CSV ↔ JSON, and CSV ↔ YAML. A pasted file stays on this machine.
 
 ### Development
 
-Planned. UUID Generator, Cron Parser, Regex Tester, Timestamp Converter, and
-SemVer Calculator.
+Ready. UUID Generator, Cron Parser, Regex Tester, Timestamp Converter,
+and SemVer Calculator. A value stays on this machine.
 
 ### GitHub
 

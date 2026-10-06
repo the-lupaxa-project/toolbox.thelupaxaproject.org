@@ -4,7 +4,10 @@ import subprocess
 import sys
 from pathlib import Path
 
+import pytest
+
 from tools_lib import (
+    CatalogueError,
     build_nav,
     load_catalogue,
     render_category_page,
@@ -22,13 +25,23 @@ def _tool(tool_id: str):
     return next(tool for tool in tools if tool.id == tool_id)
 
 
-def test_render_base64_page_contains_widget() -> None:
-    page = render_tool_page(_tool("base64"))
-    assert 'data-tool="base64"' in page
+def test_render_base_n_page_contains_widget() -> None:
+    page = render_tool_page(_tool("base-n"))
+    assert 'data-tool="base-n"' in page
+    assert 'data-field="base"' in page
+    assert 'value="64" selected' in page
+    assert 'class="tool-input"' in page
     assert 'data-action="encode"' in page
     assert 'data-action="decode"' in page
+    assert "Encode and decode text in Base 16, 32, 58, 64, or 85." in page
+    assert 'class="tool-output"' in page
     assert 'class="tool-copy" disabled' in page
-    assert 'Encode and decode Base64 text.\n\n<div class="tool-widget"' in page
+    assert (
+        'Encode and decode text in Base 16, 32, 58, 64, or 85.\n\n<div class="tool-widget"'
+    ) in page
+    assert page.index('class="tool-input"') < page.index('class="tool-actions"')
+    assert page.index('class="tool-actions"') < page.index('data-field="base"')
+    assert page.index('data-field="base"') < page.index('data-action="encode"')
 
 
 def test_render_jwt_decoder_has_decode_only() -> None:
@@ -44,6 +57,13 @@ def test_render_hash_generator_contains_widget() -> None:
     assert 'data-action="sha-384"' in page
     assert 'data-action="sha-512"' in page
     assert "This tool is not available yet." not in page
+
+
+def test_render_uuid_generator_count_field_bounds() -> None:
+    page = render_tool_page(_tool("uuid-generator"))
+    assert 'data-field="count"' in page
+    assert 'max="20"' in page
+    assert 'max="3650"' not in page
 
 
 def test_form_tool_renders_fields_and_two_outputs(tmp_path: Path) -> None:
@@ -105,6 +125,76 @@ categories:
     assert "tool-input" not in page
 
 
+def test_paste_tool_with_a_choice_keeps_the_textarea(tmp_path: Path) -> None:
+    catalogue = tmp_path / "tools.yml"
+    catalogue.write_text(
+        """
+categories:
+  - id: encoding
+    title: Encoding
+    description: Encoding tools.
+    tools:
+      - id: base-n
+        title: Base N
+        summary: Encode and decode text in Base 16, 32, 58, 64, or 85.
+        status: ready
+        actions:
+          - id: encode
+            label: Encode
+          - id: decode
+            label: Decode
+        fields:
+          - id: base
+            label: Base
+            kind: choice
+            default: "64"
+            choices:
+              - id: "16"
+                label: Base 16
+              - id: "64"
+                label: Base 64
+""",
+        encoding="utf-8",
+    )
+    page = render_tool_page(load_catalogue(catalogue)[0])
+    assert 'data-field="base"' in page
+    assert 'value="64" selected' in page
+    assert 'class="tool-input"' in page
+    assert 'data-action="encode"' in page
+    assert 'data-action="decode"' in page
+    assert "data-output" not in page
+    assert page.index('class="tool-input"') < page.index('class="tool-actions"')
+    assert page.index('class="tool-actions"') < page.index('data-field="base"')
+    assert page.index('data-field="base"') < page.index('data-action="encode"')
+
+
+def test_paste_tool_rejects_a_text_field_without_outputs(tmp_path: Path) -> None:
+    catalogue = tmp_path / "tools.yml"
+    catalogue.write_text(
+        """
+categories:
+  - id: encoding
+    title: Encoding
+    description: Encoding tools.
+    tools:
+      - id: sample
+        title: Sample
+        summary: A sample.
+        status: ready
+        actions:
+          - id: encode
+            label: Encode
+        fields:
+          - id: value
+            label: Value
+            kind: text
+""",
+        encoding="utf-8",
+    )
+    with pytest.raises(CatalogueError, match="fields must be choices"):
+        load_catalogue(catalogue)
+
+
 def test_render_csr_generator_page() -> None:
     page = render_tool_page(_tool("csr-generator"))
     assert 'data-field="common-name"' in page
@@ -163,6 +253,9 @@ def test_category_pages_describe_the_tools_on_offer() -> None:
         if category_id == "data":
             assert "A pasted file stays on this machine." in page
             assert "CSV ↔ YAML" in page
+        if category_id == "development":
+            assert "A value stays on this machine." in page
+            assert "SemVer Calculator" in page
         assert f'{description.rstrip(chr(10))}\n\n<div class="grid cards" markdown>' in page
         assert "\n\n\n" not in page
         for tool in category_tools:
@@ -191,11 +284,7 @@ def test_build_nav_is_home_plus_six_sections() -> None:
     encoding = next(item["Encoding"] for item in nav if "Encoding" in item)
     assert encoding[0] == {"Encoding": "encoding/index.md"}
     assert [next(iter(child)) for child in encoding[1:]] == [
-        "Base 16",
-        "Base 32",
-        "Base 58",
-        "Base 85",
-        "Base64",
+        "Base N",
         "Binary",
         "Hexadecimal",
         "JWT Decoder",
@@ -210,7 +299,7 @@ def test_write_generated_pages_writes_pages_and_drops_stale_file(tmp_path: Path)
     write_generated_pages(tools, tmp_path)
     encoding = (tmp_path / "encoding" / "index.md").read_text(encoding="utf-8")
     assert (tmp_path / "index.md").is_file()
-    assert "base64.md" in encoding
+    assert "base-n.md" in encoding
     assert (tmp_path / "dns" / "mx-lookup.md").is_file()
     stale = tmp_path / "encoding" / "gone.md"
     stale.write_text("stale\n", encoding="utf-8")
@@ -228,7 +317,7 @@ def test_write_generated_pages_skips_unchanged_files(tmp_path: Path) -> None:
     tools = load_catalogue(CATALOGUE)
     write_generated_pages(tools, tmp_path)
     index = tmp_path / "index.md"
-    page = tmp_path / "encoding" / "base64.md"
+    page = tmp_path / "encoding" / "base-n.md"
     index_mtime = index.stat().st_mtime_ns
     page_mtime = page.stat().st_mtime_ns
     write_generated_pages(tools, tmp_path)
@@ -255,32 +344,35 @@ def test_strict_build_contains_widget_and_planned_sentence() -> None:
     assert "cursor: default" in tool_css
     assert "var(--lupaxa-light-blue)" in tool_css
 
-    base64_page = ROOT / "site" / "encoding" / "base64" / "index.html"
-    assert base64_page.is_file()
-    base64_html = base64_page.read_text(encoding="utf-8")
-    assert 'data-tool="base64"' in base64_html
-    assert "md-sidebar--primary" in base64_html
-    assert "lupaxa-header__drawer-button" in base64_html
-    assert "hide-primary-sidebar.css" in base64_html
-    shortcuts = base64_html.split("tool-shortcuts", 1)[1].split("</nav>", 1)[0]
+    base_n_page = ROOT / "site" / "encoding" / "base-n" / "index.html"
+    assert base_n_page.is_file()
+    base_n_html = base_n_page.read_text(encoding="utf-8")
+    assert 'data-tool="base-n"' in base_n_html
+    assert "tools/base-n.js" in base_n_html
+    assert "md-sidebar--primary" in base_n_html
+    assert "lupaxa-header__drawer-button" in base_n_html
+    assert "hide-primary-sidebar.css" in base_n_html
+    shortcuts = base_n_html.split("tool-shortcuts", 1)[1].split("</nav>", 1)[0]
     active = shortcuts.split("tool-shortcuts__link--active", 1)[1].split("</a>", 1)[0]
     assert "Encoding Tools" in shortcuts
-    assert "Base64" in active
+    assert "Base N" in active
     assert "Hexadecimal" in shortcuts
     assert "URL Encode/Decode" in shortcuts
     assert "JWT Decoder" in shortcuts
-    assert "Base 16" in shortcuts
-    assert "Base 32" in shortcuts
-    assert "Base 58" in shortcuts
-    assert "Base 85" in shortcuts
     assert "Binary" in shortcuts
     assert "Octal" in shortcuts
-    assert "tools/base-16.js" in base64_html
-    assert "tools/base-32.js" in base64_html
-    assert "tools/base-58.js" in base64_html
-    assert "tools/base-85.js" in base64_html
-    assert "tools/binary.js" in base64_html
-    assert "tools/octal.js" in base64_html
+    assert "Base 16" not in shortcuts
+    assert "Base 32" not in shortcuts
+    assert "Base 58" not in shortcuts
+    assert "Base 85" not in shortcuts
+    assert "Base64" not in shortcuts
+    assert "tools/base64.js" not in base_n_html
+    assert "tools/base-16.js" not in base_n_html
+    assert "tools/base-32.js" not in base_n_html
+    assert "tools/base-58.js" not in base_n_html
+    assert "tools/base-85.js" not in base_n_html
+    assert "tools/binary.js" in base_n_html
+    assert "tools/octal.js" in base_n_html
     assert "Hash Generator" not in shortcuts
 
     hash_generator = ROOT / "site" / "cryptography" / "hash-generator" / "index.html"
@@ -323,9 +415,12 @@ def test_strict_build_contains_widget_and_planned_sentence() -> None:
     assert 'value="cloudflare"' in dns_html
     assert "This tool is not available yet." not in dns_html
 
-    planned = ROOT / "site" / "development" / "uuid-generator" / "index.html"
-    assert planned.is_file()
-    assert "This tool is not available yet." in planned.read_text(encoding="utf-8")
+    ready_uuid = ROOT / "site" / "development" / "uuid-generator" / "index.html"
+    assert ready_uuid.is_file()
+    uuid_html = ready_uuid.read_text(encoding="utf-8")
+    assert 'data-tool="uuid-generator"' in uuid_html
+    assert 'data-action="generate"' in uuid_html
+    assert "This tool is not available yet." not in uuid_html
 
     ready = ROOT / "site" / "data" / "json-formatter" / "index.html"
     ready_html = ready.read_text(encoding="utf-8")
@@ -359,11 +454,11 @@ def test_built_encoding_page_loads_scripts() -> None:
     )
     assert completed.returncode == 0, completed.stdout + completed.stderr
 
-    base64_page = (ROOT / "site" / "encoding" / "base64" / "index.html").read_text(encoding="utf-8")
-    assert "tools/base64.js" in base64_page
-    assert "toolbox.js" in base64_page
-    assert 'id="lupaxa-lang"' in base64_page
-    assert "cdn.counter.dev/script.js" in base64_page
-    assert "ef410665-76d4-43fe-9e91-53f26ed1004b" in base64_page
-    assert "assets/images/brand/social-media-card.png" in base64_page
+    base_n_page = (ROOT / "site" / "encoding" / "base-n" / "index.html").read_text(encoding="utf-8")
+    assert "tools/base-n.js" in base_n_page
+    assert "toolbox.js" in base_n_page
+    assert 'id="lupaxa-lang"' in base_n_page
+    assert "cdn.counter.dev/script.js" in base_n_page
+    assert "ef410665-76d4-43fe-9e91-53f26ed1004b" in base_n_page
+    assert "assets/images/brand/social-media-card.png" in base_n_page
     assert (ROOT / "site" / "assets" / "stylesheets" / "40-components" / "tool.css").is_file()

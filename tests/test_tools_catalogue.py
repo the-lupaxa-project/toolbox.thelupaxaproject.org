@@ -10,13 +10,9 @@ ROOT = Path(__file__).resolve().parents[1]
 CATALOGUE = ROOT / "data" / "tools.yml"
 
 EXPECTED = [
-    ("encoding", "base64", "Base64", "ready"),
+    ("encoding", "base-n", "Base N", "ready"),
     ("encoding", "url-encode-decode", "URL Encode/Decode", "ready"),
     ("encoding", "hex", "Hexadecimal", "ready"),
-    ("encoding", "base-16", "Base 16", "ready"),
-    ("encoding", "base-32", "Base 32", "ready"),
-    ("encoding", "base-58", "Base 58", "ready"),
-    ("encoding", "base-85", "Base 85", "ready"),
     ("encoding", "binary", "Binary", "ready"),
     ("encoding", "octal", "Octal", "ready"),
     ("encoding", "jwt-decoder", "JWT Decoder", "ready"),
@@ -37,11 +33,11 @@ EXPECTED = [
     ("data", "csv-json", "CSV ↔ JSON", "ready"),
     ("data", "csv-yaml", "CSV ↔ YAML", "ready"),
     ("data", "xml-formatter", "XML Formatter", "ready"),
-    ("development", "uuid-generator", "UUID Generator", "planned"),
-    ("development", "cron-parser", "Cron Parser", "planned"),
-    ("development", "regex-tester", "Regex Tester", "planned"),
-    ("development", "timestamp-converter", "Timestamp Converter", "planned"),
-    ("development", "semver-calculator", "SemVer Calculator", "planned"),
+    ("development", "uuid-generator", "UUID Generator", "ready"),
+    ("development", "cron-parser", "Cron Parser", "ready"),
+    ("development", "regex-tester", "Regex Tester", "ready"),
+    ("development", "timestamp-converter", "Timestamp Converter", "ready"),
+    ("development", "semver-calculator", "SemVer Calculator", "ready"),
     ("github", "actions-yaml-validator", "Actions YAML Validator", "ready"),
     ("github", "dependabot-validator", "Dependabot Validator", "ready"),
     ("github", "workflow-inspector", "Workflow Inspector", "ready"),
@@ -227,6 +223,69 @@ def test_actions_and_summaries() -> None:
             )
             assert tool.fields == ()
             assert tool.outputs == ()
+        elif tool.id == "uuid-generator":
+            assert tuple((action.id, action.label) for action in tool.actions) == (
+                ("generate", "Generate"),
+            )
+            assert tuple((field.id, field.kind, field.default) for field in tool.fields) == (
+                ("version", "choice", "4"),
+                ("count", "number", "1"),
+            )
+            count = tool.fields[1]
+            assert count.min == "1"
+            assert count.max == "20"
+            assert tuple(choice.id for choice in tool.fields[0].choices) == ("4", "7")
+            assert tuple(output.id for output in tool.outputs) == ("result",)
+        elif tool.id == "cron-parser":
+            assert tuple((action.id, action.label) for action in tool.actions) == (
+                ("explain", "Explain"),
+            )
+            assert tool.fields == ()
+            assert tool.outputs == ()
+        elif tool.id == "regex-tester":
+            assert tuple((action.id, action.label) for action in tool.actions) == (
+                ("test", "Test"),
+            )
+            assert tuple((field.id, field.kind) for field in tool.fields) == (
+                ("pattern", "text"),
+                ("sample", "text"),
+            )
+            assert tuple(output.id for output in tool.outputs) == ("result",)
+        elif tool.id == "timestamp-converter":
+            assert tuple((action.id, action.label) for action in tool.actions) == (
+                ("to-date", "To Date"),
+                ("to-timestamp", "To Timestamp"),
+            )
+            assert tool.fields == ()
+            assert tool.outputs == ()
+        elif tool.id == "semver-calculator":
+            assert tuple((action.id, action.label) for action in tool.actions) == (
+                ("compare", "Compare"),
+                ("step", "Step"),
+            )
+            assert tuple(choice.id for choice in tool.fields[2].choices) == (
+                "major",
+                "minor",
+                "patch",
+            )
+            assert tool.fields[2].default == "patch"
+            assert tuple(output.id for output in tool.outputs) == ("result",)
+        elif tool.id == "base-n":
+            assert tuple((action.id, action.label) for action in tool.actions) == (
+                ("encode", "Encode"),
+                ("decode", "Decode"),
+            )
+            assert tuple((field.id, field.kind, field.default) for field in tool.fields) == (
+                ("base", "choice", "64"),
+            )
+            assert tuple(choice.id for choice in tool.fields[0].choices) == (
+                "16",
+                "32",
+                "58",
+                "64",
+                "85",
+            )
+            assert tool.outputs == ()
         elif tool.status == "planned":
             assert tool.actions == ()
         else:
@@ -311,6 +370,17 @@ def test_extra_javascript_order() -> None:
     assert data_indexes == sorted(data_indexes)
     assert github_indexes[-1] < data_indexes[0]
     assert data_indexes[-1] < toolbox
+    development_ordered = [
+        "assets/javascript/tools/uuid-generator.js",
+        "assets/javascript/tools/cron-parser.js",
+        "assets/javascript/tools/regex-tester.js",
+        "assets/javascript/tools/timestamp-converter.js",
+        "assets/javascript/tools/semver-calculator.js",
+    ]
+    development_indexes = [scripts.index(entry) for entry in development_ordered]
+    assert development_indexes == sorted(development_indexes)
+    assert data_indexes[-1] < development_indexes[0]
+    assert development_indexes[-1] < toolbox
     hash_generator = scripts.index("assets/javascript/tools/hash-generator.js")
     assert hash_generator < indexes[0]
 

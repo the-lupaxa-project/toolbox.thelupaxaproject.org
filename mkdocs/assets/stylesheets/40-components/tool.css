@@ -21,7 +21,17 @@
   display: flex;
   flex-wrap: wrap;
   justify-content: flex-end;
+  align-items: center;
   gap: var(--lupaxa-spacing-sm);
+}
+
+.tool-actions .tool-field {
+  flex-direction: row;
+  align-items: center;
+}
+
+.tool-actions .tool-field__control {
+  width: auto;
 }
 
 .tool-actions button,

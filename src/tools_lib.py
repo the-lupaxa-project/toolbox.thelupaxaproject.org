@@ -36,6 +36,8 @@ class Field:
     kind: str
     default: str
     choices: tuple[Choice, ...]
+    min: str = "1"
+    max: str = "3650"
 
 
 @dataclass(frozen=True)
@@ -116,7 +118,7 @@ def _tool(
     if status not in _STATUSES:
         raise CatalogueError(f"tool {tool_id} status {status!r} is invalid")
     fields = _fields(tool_map, tool_id, status)
-    outputs = _outputs(tool_map, tool_id, status, bool(fields))
+    outputs = _outputs(tool_map, tool_id, status, fields)
     return Tool(
         category_id=category_id,
         category_title=category_title,
@@ -193,6 +195,17 @@ def _fields(tool_map: dict[str, Any], tool_id: str, status: str) -> tuple[Field,
             choices = tuple(parsed_choices)
             if default not in {choice.id for choice in choices}:
                 raise CatalogueError(f"{where} default must match a choice id")
+        min_value = "1"
+        max_value = "3650"
+        if kind == "number":
+            min_raw = field_map.get("min", "1")
+            max_raw = field_map.get("max", "3650")
+            if not isinstance(min_raw, str):
+                raise CatalogueError(f"{where} min must be a string")
+            if not isinstance(max_raw, str):
+                raise CatalogueError(f"{where} max must be a string")
+            min_value = min_raw
+            max_value = max_raw
         fields.append(
             Field(
                 id=_identifier(_required_text(field_map, "id", where), where),
@@ -200,23 +213,27 @@ def _fields(tool_map: dict[str, Any], tool_id: str, status: str) -> tuple[Field,
                 kind=kind,
                 default=default,
                 choices=choices,
+                min=min_value,
+                max=max_value,
             )
         )
     return tuple(fields)
 
 
 def _outputs(
-    tool_map: dict[str, Any], tool_id: str, status: str, has_fields: bool
+    tool_map: dict[str, Any], tool_id: str, status: str, fields: tuple[Field, ...]
 ) -> tuple[Output, ...]:
     if status == "planned":
         return ()
-    if not has_fields:
+    if not fields:
         if "outputs" in tool_map:
             raise CatalogueError(f"text tool {tool_id} must not include outputs")
         return ()
     raw_outputs = tool_map.get("outputs")
     if not isinstance(raw_outputs, list) or not raw_outputs:
-        raise CatalogueError(f"form tool {tool_id} must include outputs")
+        if not all(field.kind == "choice" for field in fields):
+            raise CatalogueError(f"paste tool {tool_id} fields must be choices")
+        return ()
     outputs: list[Output] = []
     for index, raw_output in enumerate(raw_outputs):
         where = f"tool {tool_id} outputs[{index}]"
@@ -265,26 +282,49 @@ def render_tool_page(tool: Tool) -> str:
         return "\n".join(lines) + "\n"
     if tool.status != "ready":
         raise CatalogueError(f"tool {tool.id} status {tool.status!r} is invalid")
-    if tool.fields:
+    if tool.outputs:
         return "\n".join(lines) + "\n" + _form_widget(tool)
-    buttons = "\n".join(
+    return "\n".join(lines) + "\n" + _paste_widget(tool)
+
+
+def _paste_widget(tool: Tool) -> str:
+    lines = [f'<div class="tool-widget" data-tool="{html.escape(tool.id, quote=True)}">']
+    lines.append('<textarea class="tool-input" aria-label="Input"></textarea>')
+    lines.append('<div class="tool-actions">')
+    for field in tool.fields:
+        field_id = html.escape(field.id, quote=True)
+        lines.extend(
+            [
+                '<label class="tool-field">',
+                f'<span class="tool-field__label">{html.escape(field.label, quote=True)}</span>',
+            ]
+        )
+        lines.append(f'<select class="tool-field__control" data-field="{field_id}">')
+        for choice in field.choices:
+            choice_id = html.escape(choice.id, quote=True)
+            selected = " selected" if choice.id == field.default else ""
+            lines.append(
+                f'<option value="{choice_id}"{selected}>'
+                f"{html.escape(choice.label, quote=True)}</option>"
+            )
+        lines.append("</select>")
+        lines.append("</label>")
+    lines.extend(
         "<button "
         f'type="button" data-action="{html.escape(action.id, quote=True)}">'
         f"{html.escape(action.label, quote=True)}</button>"
         for action in tool.actions
     )
-    widget = (
-        f'<div class="tool-widget" data-tool="{html.escape(tool.id, quote=True)}">\n'
-        '<textarea class="tool-input" aria-label="Input"></textarea>\n'
-        '<div class="tool-actions">\n'
-        f"{buttons}\n"
-        "</div>\n"
-        '<textarea class="tool-output" aria-label="Output" readonly></textarea>\n'
-        '<button type="button" class="tool-copy" disabled>Copy</button>\n'
-        '<p class="tool-error" role="alert"></p>\n'
-        "</div>\n"
+    lines.append("</div>")
+    lines.extend(
+        [
+            '<textarea class="tool-output" aria-label="Output" readonly></textarea>',
+            '<button type="button" class="tool-copy" disabled>Copy</button>',
+            '<p class="tool-error" role="alert"></p>',
+            "</div>",
+        ]
     )
-    return "\n".join(lines) + "\n" + widget
+    return "\n".join(lines) + "\n"
 
 
 def _form_widget(tool: Tool) -> str:
@@ -307,7 +347,8 @@ def _form_widget(tool: Tool) -> str:
                 '<input class="tool-field__control" type="number" '
                 f'data-field="{field_id}" '
                 f'value="{html.escape(field.default, quote=True)}" '
-                'min="1" max="3650" inputmode="numeric">'
+                f'min="{html.escape(field.min, quote=True)}" '
+                f'max="{html.escape(field.max, quote=True)}" inputmode="numeric">'
             )
         else:
             lines.append(f'<select class="tool-field__control" data-field="{field_id}">')

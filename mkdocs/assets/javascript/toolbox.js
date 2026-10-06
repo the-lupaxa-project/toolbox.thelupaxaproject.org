@@ -69,7 +69,15 @@ function boot() {
           showError(gated.error);
           return;
         }
-        value = gated.value;
+        const fields = [...widget.querySelectorAll("[data-field]")];
+        if (fields.length === 0) {
+          value = gated.value;
+        } else {
+          value = { text: gated.value };
+          for (const field of fields) {
+            value[field.getAttribute("data-field")] = field.value;
+          }
+        }
       } else {
         value = {};
         for (const field of widget.querySelectorAll("[data-field]")) {

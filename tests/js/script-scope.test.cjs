@@ -10,13 +10,9 @@ const TOOLS_DIR = path.join(__dirname, "..", "..", "mkdocs", "assets", "javascri
 
 // mkdocs.yml extra_javascript order.
 const FILES = [
-  "base64.js",
+  "base-n.js",
   "url-encode-decode.js",
   "hex.js",
-  "base-16.js",
-  "base-32.js",
-  "base-58.js",
-  "base-85.js",
   "binary.js",
   "octal.js",
   "jwt-decoder.js",
@@ -27,13 +23,9 @@ const FILES = [
   "pem-der-converter.js",
 ];
 const IDS = [
-  "base64",
+  "base-n",
   "url-encode-decode",
   "hex",
-  "base-16",
-  "base-32",
-  "base-58",
-  "base-85",
   "binary",
   "octal",
   "jwt-decoder",

@@ -180,6 +180,30 @@ describe("boot", () => {
     assert.equal(error.textContent, "");
   });
 
+  it("passes the paste text and the choice to run", async () => {
+    const base = makeElement({ "data-field": "base" }, [], "64");
+    const input = makeElement({}, ["tool-input"], "hi");
+    const action = makeElement({ "data-action": "encode" });
+    const output = makeElement({}, ["tool-output"]);
+    const copy = makeElement({}, ["tool-copy"]);
+    const error = makeElement({}, ["tool-error"]);
+    const widget = makeWidget("base-n", [base, input, action, output, copy, error]);
+    const calls = [];
+    const boot = bootWidget(widget, {
+      run(actionId, value) {
+        calls.push([actionId, value]);
+        return { ok: true, output: "aGk=" };
+      },
+    });
+
+    boot();
+    await click(action);
+
+    assert.deepEqual(calls, [["encode", { text: "hi", base: "64" }]]);
+    assert.equal(output.value, "aGk=");
+  });
+
+
   it("shows Unknown action. when run rejects", async () => {
     const input = makeElement({}, ["tool-input"], "text");
     const action = makeElement({ "data-action": "encode" });

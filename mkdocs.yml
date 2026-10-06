@@ -119,13 +119,9 @@ extra_javascript:
   - assets/javascript/page-lifecycle.js
   - assets/javascript/language-preference.js
   - assets/javascript/header-active-nav.js
-  - assets/javascript/tools/base64.js
+  - assets/javascript/tools/base-n.js
   - assets/javascript/tools/url-encode-decode.js
   - assets/javascript/tools/hex.js
-  - assets/javascript/tools/base-16.js
-  - assets/javascript/tools/base-32.js
-  - assets/javascript/tools/base-58.js
-  - assets/javascript/tools/base-85.js
   - assets/javascript/tools/binary.js
   - assets/javascript/tools/octal.js
   - assets/javascript/tools/jwt-decoder.js
@@ -155,4 +151,9 @@ extra_javascript:
   - assets/javascript/tools/csv-json.js
   - assets/javascript/tools/csv-yaml.js
   - assets/javascript/tools/xml-formatter.js
+  - assets/javascript/tools/uuid-generator.js
+  - assets/javascript/tools/cron-parser.js
+  - assets/javascript/tools/regex-tester.js
+  - assets/javascript/tools/timestamp-converter.js
+  - assets/javascript/tools/semver-calculator.js
   - assets/javascript/toolbox.js

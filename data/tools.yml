@@ -3,25 +3,39 @@ categories:
     title: Encoding
     description: >
       Encoding changes text into another form you can paste into a URL, a
-      token, or a file, and changes it back. Base64 encodes and decodes
-      Base64 text. Base 16 encodes and decodes Base 16 text. Base 32 encodes
-      and decodes Base 32 text. Base 58 encodes and decodes Base 58 text.
-      Base 85 encodes and decodes Base 85 text. Binary encodes and decodes
-      binary text. Hexadecimal encodes and decodes hexadecimal text.
-      JWT Decoder reads a token and shows the header, the payload, and the
-      raw signature. It does not check the signature. Octal encodes and
-      decodes octal text. URL Encode/Decode prepares text for a URL component
-      and reads it back.
+      token, or a file, and changes it back. Base N encodes and decodes
+      Base 16, Base 32, Base 58, Base 64, and Base 85 text. URL
+      Encode/Decode prepares text for a URL component and reads it back.
+      Hexadecimal encodes and decodes hexadecimal text. Binary encodes and
+      decodes binary text. Octal encodes and decodes octal text. JWT
+      Decoder reads a token and shows the header, the payload, and the raw
+      signature. It does not check the signature.
     tools:
-      - id: base64
-        title: Base64
-        summary: Encode and decode Base64 text.
+      - id: base-n
+        title: Base N
+        summary: Encode and decode text in Base 16, 32, 58, 64, or 85.
         status: ready
         actions:
           - id: encode
             label: Encode
           - id: decode
             label: Decode
+        fields:
+          - id: base
+            label: Base
+            kind: choice
+            default: "64"
+            choices:
+              - id: "16"
+                label: Base 16
+              - id: "32"
+                label: Base 32
+              - id: "58"
+                label: Base 58
+              - id: "64"
+                label: Base 64
+              - id: "85"
+                label: Base 85
       - id: url-encode-decode
         title: URL Encode/Decode
         summary: Encode and decode text for a URL component.
@@ -34,42 +48,6 @@ categories:
       - id: hex
         title: Hexadecimal
         summary: Encode and decode hexadecimal text.
-        status: ready
-        actions:
-          - id: encode
-            label: Encode
-          - id: decode
-            label: Decode
-      - id: base-16
-        title: Base 16
-        summary: Encode and decode Base 16 text.
-        status: ready
-        actions:
-          - id: encode
-            label: Encode
-          - id: decode
-            label: Decode
-      - id: base-32
-        title: Base 32
-        summary: Encode and decode Base 32 text.
-        status: ready
-        actions:
-          - id: encode
-            label: Encode
-          - id: decode
-            label: Decode
-      - id: base-58
-        title: Base 58
-        summary: Encode and decode Base 58 text.
-        status: ready
-        actions:
-          - id: encode
-            label: Encode
-          - id: decode
-            label: Decode
-      - id: base-85
-        title: Base 85
-        summary: Encode and decode Base 85 text.
         status: ready
         actions:
           - id: encode
@@ -456,31 +434,102 @@ categories:
     title: Development
     description: >
       Development covers everyday helpers for identifiers, schedules, and
-      versions. UUID Generator creates a UUID. Cron Parser explains a cron
-      expression. Regex Tester tries a regular expression against text.
-      Timestamp Converter converts between timestamps and calendar dates.
-      SemVer Calculator compares semantic versions and steps them.
+      versions. UUID Generator creates a version 4 or version 7 UUID, and you
+      choose how many. Cron Parser explains a five-field cron expression and
+      lists the next run times in UTC. Regex Tester shows the matches for a
+      regular expression. Timestamp Converter converts Unix time and a UTC
+      date. SemVer Calculator compares semantic versions and steps them.
+      A value stays on this machine.
     tools:
       - id: uuid-generator
         title: UUID Generator
         summary: Generate a UUID.
-        status: planned
+        status: ready
+        actions:
+          - id: generate
+            label: Generate
+        fields:
+          - id: version
+            label: Version
+            kind: choice
+            default: "4"
+            choices:
+              - id: "4"
+                label: Version 4
+              - id: "7"
+                label: Version 7
+          - id: count
+            label: Count
+            kind: number
+            default: "1"
+            min: "1"
+            max: "20"
+        outputs:
+          - id: result
+            label: Result
       - id: cron-parser
         title: Cron Parser
         summary: Explain a cron expression.
-        status: planned
+        status: ready
+        actions:
+          - id: explain
+            label: Explain
       - id: regex-tester
         title: Regex Tester
         summary: Try a regular expression against text.
-        status: planned
+        status: ready
+        actions:
+          - id: test
+            label: Test
+        fields:
+          - id: pattern
+            label: Pattern
+            kind: text
+          - id: sample
+            label: Sample
+            kind: text
+        outputs:
+          - id: result
+            label: Result
       - id: timestamp-converter
         title: Timestamp Converter
         summary: Convert between timestamps and calendar dates.
-        status: planned
+        status: ready
+        actions:
+          - id: to-date
+            label: To Date
+          - id: to-timestamp
+            label: To Timestamp
       - id: semver-calculator
         title: SemVer Calculator
         summary: Compare and step semantic versions.
-        status: planned
+        status: ready
+        fields:
+          - id: version
+            label: Version
+            kind: text
+          - id: other
+            label: Other version
+            kind: text
+          - id: step
+            label: Step
+            kind: choice
+            default: patch
+            choices:
+              - id: major
+                label: Major
+              - id: minor
+                label: Minor
+              - id: patch
+                label: Patch
+        actions:
+          - id: compare
+            label: Compare
+          - id: step
+            label: Step
+        outputs:
+          - id: result
+            label: Result
   - id: github
     title: GitHub
     description: >
