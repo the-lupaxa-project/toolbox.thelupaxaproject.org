@@ -20,3 +20,5 @@ updates:
     labels:
       - "dependabot: ecosystem : github actions"
       - "dependabot: dependencies"
+    assignees:
+      - "Lupraxus"
