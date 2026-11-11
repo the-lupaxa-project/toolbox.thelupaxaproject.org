@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "lupaxa-web-toolbox"
-version = "0.0.0"
+version = "0.1.0"
 description = "Lupaxa Web Toolbox, a static browser-tool site."
 readme = "README.md"
 license = { file = "LICENCE" }
