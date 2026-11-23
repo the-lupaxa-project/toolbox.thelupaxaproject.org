@@ -28,6 +28,7 @@ jobs:
     secrets: inherit
     with:
       exclude_files: "^\\.venv/,^venv/,^site/,^\\.makefiles/,^cursor-docs/,\\.egg-info/,^\\.superpowers/,^\\.cursor/"
+      whitelist: "example.com"
 
   generate-workflow-summary:
     name: Generate Workflow Summary
