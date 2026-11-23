@@ -1,14 +1,14 @@
 {% extends "base.html" %}
 
-{# Optional: hide left site navigation while keeping the TOC sidebar.
-   Controlled by mkdocs.yml → extra.hide_primary_sidebar #}
+{# Primary sidebar stays in the DOM so the phone drawer has a tree.
+   extra.hide_primary_sidebar hides the left column on desktop/tablet.
+   extra.hide_secondary_sidebar omits the TOC sidebar. #}
 {% block site_nav %}
   {% set features = config.theme.features or [] %}
   {% if nav %}
     {% if page.meta and page.meta.hide %}
       {% set hidden = "hidden" if "navigation" in page.meta.hide %}
     {% endif %}
-    {# Wide screens hide this with CSS. Tablet and mobile use it as the menu drawer. #}
     <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" {{ hidden }}>
       <div class="md-sidebar__scrollwrap">
         <div class="md-sidebar__inner">
@@ -17,7 +17,7 @@
       </div>
     </div>
   {% endif %}
-  {% if "toc.integrate" not in features %}
+  {% if "toc.integrate" not in features and not config.extra.hide_secondary_sidebar %}
     {% if page.meta and page.meta.hide %}
       {% set hidden = "hidden" if "toc" in page.meta.hide %}
     {% endif %}
@@ -46,17 +46,7 @@
       </feMerge>
     </filter>
   </svg>
-  {% set is_article_page = page and page.file and page.file.src_uri.startswith("articles/") %}
-  <div class="md-content" data-md-component="content">
-    {% if "navigation.path" in features %}
-      {% include "partials/path.html" %}
-    {% endif %}
-    <article class="md-content__inner md-typeset{% if is_article_page %} lupaxa-article-page{% endif %}">
-      {% block content %}
-        {% include "partials/content.html" %}
-      {% endblock %}
-    </article>
-  </div>
+  {{ super() }}
 {% endblock %}
 
 {% block extrahead %}
@@ -71,7 +61,14 @@
   ></script>
   {% endif %}
 
-  {% if config.extra.hide_primary_sidebar %}
+  {# Cloudflare Web Analytics — only when extra.cloudflare_analytics_token is set #}
+  {% if config.extra.cloudflare_analytics_token %}
+  <!-- Cloudflare Web Analytics -->
+  <script type="module" src="https://static.cloudflareinsights.com/beacon.min.js" data-cf-beacon='{"token": "{{ config.extra.cloudflare_analytics_token | e }}"}'></script>
+  <!-- End Cloudflare Web Analytics -->
+  {% endif %}
+
+  {% if config.extra.hide_primary_sidebar or config.extra.hide_secondary_sidebar %}
   <link
     rel="stylesheet"
     href="{{ 'assets/stylesheets/hide-primary-sidebar.css' | url }}"
@@ -153,8 +150,6 @@
      Standard metadata
      ------------------------------------------------------------------------- #}
 
-  <meta name="description" content="{{ social_description | e }}">
-  <meta name="author" content="{{ config.site_author | e }}">
   <meta name="application-name" content="{{ config.site_name | e }}">
   <meta name="theme-color" content="{{ config.extra.theme_color | d('#203959') }}">
   <meta name="color-scheme" content="dark">

@@ -272,19 +272,21 @@ def render_tool_page(tool: Tool) -> str:
         f"title: {tool.title}",
         "---",
         "",
+        '<div class="lupaxa-page-card" markdown>',
+        "",
         f"# {tool.title}",
         "",
-        tool.summary,
+        tool.summary.rstrip("\n"),
         "",
     ]
     if tool.status == "planned":
-        lines.append("This tool is not available yet.")
-        return "\n".join(lines) + "\n"
+        lines.extend(["This tool is not available yet.", "", "</div>", ""])
+        return "\n".join(lines).rstrip() + "\n"
     if tool.status != "ready":
         raise CatalogueError(f"tool {tool.id} status {tool.status!r} is invalid")
-    if tool.outputs:
-        return "\n".join(lines) + "\n" + _form_widget(tool)
-    return "\n".join(lines) + "\n" + _paste_widget(tool)
+    widget = _form_widget(tool) if tool.outputs else _paste_widget(tool)
+    lines.extend([widget.rstrip("\n"), "", "</div>", ""])
+    return "\n".join(lines).rstrip() + "\n"
 
 
 def _paste_widget(tool: Tool) -> str:
@@ -407,9 +409,9 @@ def render_home(tools: tuple[Tool, ...]) -> str:
         + "</p>",
         "</div>",
         "",
-        '<aside class="lupaxa-privacy-note">',
-        '    <p class="lupaxa-privacy-note__title">In Your Browser</p>',
-        "    <hr>",
+        "## In Your Browser",
+        "",
+        '<div class="about-introduction about-introduction-lead">',
         "    <p>Every tool on this site runs in the page you have open."
         + " Paste text for encoding, a hash, a certificate, or any other"
         + " tool, and the page reads it and writes the result back here."
@@ -419,14 +421,24 @@ def render_home(tools: tuple[Tool, ...]) -> str:
         + " private material remain under your control. A DNS lookup sends"
         + " the name or address to the resolver you pick (Cloudflare,"
         + " Google, or Quad9). This site does not store that query.</p>",
-        "</aside>",
+        "</div>",
+        "",
+        "## Tools",
         "",
         '<div class="grid cards lupaxa-landing-grid" markdown>',
         "",
     ]
     for category_id, category_title, category_tools in _categories(tools):
         href = f"{category_id}/index.md"
-        parts.extend(_card(category_title, href, _tool_list(category_tools)))
+        parts.extend(
+            _card(
+                category_title,
+                href,
+                _tool_list(category_tools),
+                rule=False,
+                icon=_CATEGORY_ICONS[category_id],
+            )
+        )
     parts.append("</div>")
     parts.append("")
     return "\n".join(parts).rstrip() + "\n"
@@ -441,6 +453,8 @@ def render_category_page(category_title: str, category_tools: list[Tool]) -> str
         "  - toc",
         "---",
         "",
+        '<div class="lupaxa-page-card" markdown>',
+        "",
         f"# {category_title}",
         "",
         category_tools[0].category_description.rstrip("\n"),
@@ -449,21 +463,79 @@ def render_category_page(category_title: str, category_tools: list[Tool]) -> str
         "",
     ]
     for tool in category_tools:
-        parts.extend(_card(tool.title, f"{tool.id}.md", tool.summary))
-    parts.append("</div>")
-    parts.append("")
+        parts.extend(
+            _card(
+                tool.title,
+                f"{tool.id}.md",
+                tool.summary,
+                rule=False,
+                icon=_TOOL_ICONS[tool.id],
+            )
+        )
+    parts.extend(["</div>", "", "</div>", ""])
     return "\n".join(parts).rstrip() + "\n"
 
 
-def _card(title: str, href: str, summary: str) -> list[str]:
-    return [
-        f"-   **[{title}]({href})**",
-        "",
-        "    ---",
-        "",
-        f"    {summary}",
-        "",
-    ]
+_CATEGORY_ICONS = {
+    "encoding": "material-code-braces",
+    "cryptography": "material-shield-lock-outline",
+    "dns": "material-dns",
+    "data": "material-database-outline",
+    "development": "material-console",
+    "github": "material-github",
+}
+
+_TOOL_ICONS = {
+    "base-n": "material-numeric",
+    "url-encode-decode": "material-link-variant",
+    "hex": "material-hexadecimal",
+    "binary": "material-memory",
+    "octal": "material-numeric-8-box-outline",
+    "jwt-decoder": "material-key-variant",
+    "hash-generator": "material-fingerprint",
+    "certificate-generator": "material-certificate-outline",
+    "csr-generator": "material-file-certificate-outline",
+    "certificate-inspector": "material-file-search-outline",
+    "pem-der-converter": "material-swap-horizontal",
+    "dns-lookup": "material-dns",
+    "reverse-dns": "material-arrow-u-left-top",
+    "mx-lookup": "material-email-search-outline",
+    "spf-inspector": "material-email-check-outline",
+    "dmarc-inspector": "material-email-lock-outline",
+    "dnssec-inspector": "material-shield-check-outline",
+    "json-formatter": "material-code-json",
+    "yaml-formatter": "material-code-braces",
+    "json-yaml": "material-swap-horizontal",
+    "csv-json": "material-table-arrow-right",
+    "csv-yaml": "material-table",
+    "xml-formatter": "material-xml",
+    "uuid-generator": "material-identifier",
+    "cron-parser": "material-clock-outline",
+    "regex-tester": "material-regex",
+    "timestamp-converter": "material-calendar-clock",
+    "semver-calculator": "material-tag-outline",
+    "actions-yaml-validator": "material-file-check-outline",
+    "dependabot-validator": "material-robot-outline",
+    "workflow-inspector": "material-source-branch",
+}
+
+
+def _card(
+    title: str,
+    href: str,
+    summary: str,
+    *,
+    rule: bool = True,
+    icon: str | None = None,
+) -> list[str]:
+    label = f"**[{title}]({href})**"
+    if icon:
+        label = f":{icon}:{{ .lg .middle }} {label}"
+    lines = [f"-   {label}", ""]
+    if rule:
+        lines.extend(["    ---", ""])
+    lines.extend([f"    {summary.rstrip()}", ""])
+    return lines
 
 
 def _tool_list(category_tools: list[Tool]) -> str:
@@ -482,6 +554,7 @@ def build_nav(tools: tuple[Tool, ...]) -> list[Any]:
         sections.append({category_title: children})
     sections.sort(key=lambda item: next(iter(item)).casefold())
     nav.extend(sections)
+    nav.append({"Sponsor": "sponsor.md"})
     return nav
 
 

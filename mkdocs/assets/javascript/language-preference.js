@@ -33,7 +33,12 @@ const LupaxaLanguagePreference = (() => {
     "uk",
   ];
   const SKIP_TAGS = new Set(["PRE", "CODE", "SCRIPT", "STYLE", "NOSCRIPT"]);
-  const SKIP_CLASSES = new Set(["md-footer", "md-copyright", "notranslate"]);
+  const SKIP_CLASSES = new Set([
+    "md-footer",
+    "md-copyright",
+    "md-source",
+    "notranslate",
+  ]);
 
   const safeStorage = (backing) => {
     if (!backing) {

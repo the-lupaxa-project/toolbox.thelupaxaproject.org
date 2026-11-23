@@ -9,8 +9,8 @@
 .tool-output {
   width: 100%;
   min-height: 10rem;
-  font-family: "IBM Plex Mono", monospace;
-  border: 1px solid var(--lupaxa-light-blue);
+  font-family: var(--md-code-font), monospace;
+  border: 1px solid var(--md-default-fg-color--lightest);
   border-radius: var(--lupaxa-radius-sm);
   background: var(--lupaxa-dark-blue);
   color: var(--lupaxa-white);
@@ -36,10 +36,11 @@
 
 .tool-actions button,
 .tool-copy {
-  font-family: "IBM Plex Sans", sans-serif;
+  font-family: inherit;
+  font-weight: 600;
   background: var(--lupaxa-blue);
   color: var(--lupaxa-white);
-  border: 0;
+  border: 1px solid var(--lupaxa-blue);
   border-radius: var(--lupaxa-radius-button);
   padding: var(--lupaxa-spacing-sm) var(--lupaxa-spacing-md);
   cursor: pointer;
@@ -55,6 +56,7 @@
 .tool-copy:focus-visible {
   background: var(--lupaxa-light-blue);
   color: var(--lupaxa-dark-blue);
+  border-color: var(--lupaxa-light-blue);
 }
 
 .tool-actions button:disabled,
@@ -69,6 +71,7 @@
 .tool-copy:disabled:focus-visible {
   background: var(--lupaxa-blue);
   color: var(--lupaxa-white);
+  border-color: var(--lupaxa-blue);
 }
 
 .tool-error {
@@ -90,12 +93,12 @@
 
 .tool-field__control {
   width: 100%;
-  font-family: "IBM Plex Sans", sans-serif;
-  border: 1px solid var(--lupaxa-light-blue);
-  border-radius: var(--lupaxa-radius-sm);
+  font-family: inherit;
+  border: 1px solid var(--md-default-fg-color--lightest);
+  border-radius: var(--lupaxa-radius-button);
   background: var(--lupaxa-dark-blue);
   color: var(--lupaxa-white);
-  padding: var(--lupaxa-spacing-sm);
+  padding: 0.7rem 0.85rem;
 }
 
 .tool-shortcuts {
@@ -128,15 +131,11 @@
   font-weight: 500;
   line-height: 1.4;
   text-decoration: none;
-  transition: font-weight var(--lupaxa-transition-fast);
+  transition: color var(--lupaxa-transition-fast);
 }
 
 .tool-shortcuts__link:hover,
-.tool-shortcuts__link:focus-visible {
-  color: var(--md-default-fg-color);
-  font-weight: 700;
-}
-
+.tool-shortcuts__link:focus-visible,
 .tool-shortcuts__link--active,
 .tool-shortcuts__link--active:hover,
 .tool-shortcuts__link--active:focus-visible {
@@ -149,8 +148,16 @@
   text-decoration-skip-ink: auto;
 }
 
-/* Computer layout only. Tablet and mobile keep the header menu. */
-@media screen and (max-width: 76.234375em) {
+.md-typeset .lupaxa-page-card .tool-widget p,
+.md-typeset .lupaxa-page-card .tool-error {
+  text-align: left;
+  hyphens: manual;
+  -webkit-hyphens: manual;
+}
+
+/* Wide screens keep the category shortcut list. The drawer takes over
+   at the same width the header links fold away. */
+@media screen and (max-width: 68em) {
   .md-sidebar--secondary:has(.tool-shortcuts) {
     display: none !important;
   }

@@ -3,28 +3,84 @@
  * Shared Cards
  * ============================================================================= */
 
+/* Same top gap as the catalogue filter panel. A margin collapses
+   away under the header; the spacer does not. */
+article.md-content__inner:has(> .lupaxa-page-card:first-child)::before {
+  content: "";
+  display: block;
+  height: var(--lupaxa-spacing-md);
+}
+
+.md-typeset .lupaxa-page-card {
+  margin: 0 0 var(--lupaxa-spacing-lg);
+  padding: 20px;
+  background: linear-gradient(180deg, var(--lupaxa-card-bg-raised), var(--lupaxa-card-bg));
+  border: 1px solid var(--md-default-fg-color--lightest);
+  border-radius: var(--lupaxa-radius-card);
+  box-shadow: var(--lupaxa-shadow-card);
+}
+
+.md-typeset .lupaxa-page-card code {
+  padding: 0.12em 0.38em;
+  color: var(--md-code-fg-color);
+  font-size: 0.86em;
+  background: var(--lupaxa-dark-blue);
+  border: 1px solid color-mix(in srgb, var(--lupaxa-blue) 12%, transparent);
+  border-radius: var(--lupaxa-radius-sm);
+  box-shadow: none;
+}
+
+.md-typeset .lupaxa-page-card pre code {
+  padding: 0;
+  color: inherit;
+  background: transparent;
+  border: 0;
+  border-radius: 0;
+}
+
+/* Right padding keeps the text clear of the copy button. */
+.md-typeset .lupaxa-page-card pre > code {
+  padding: 0.75em 3.6em 0.75em 1.4em;
+}
+
+.md-typeset .lupaxa-page-card .highlight > pre {
+  background: var(--lupaxa-dark-blue);
+  border: 1px solid var(--md-default-fg-color--lightest);
+  border-radius: var(--lupaxa-radius-sm);
+  box-shadow: var(--lupaxa-shadow-panel);
+}
+
+/* The copy control sits on the code block. Keep it the same colour. */
+.md-typeset .lupaxa-page-card .md-code__nav,
+.md-typeset .lupaxa-page-card pre:hover > .md-code__nav {
+  background-color: var(--lupaxa-dark-blue);
+  box-shadow: none;
+}
+
+.md-typeset .lupaxa-page-card > :first-child {
+  margin-top: 0;
+}
+
+.md-typeset .lupaxa-page-card > :last-child {
+  margin-bottom: 0;
+}
+
+.md-typeset .admonition {
+  overflow: hidden;
+  border-radius: var(--lupaxa-radius-card);
+}
+
+.md-typeset .lupaxa-page-card p {
+  text-align: justify;
+  hyphens: auto;
+  hyphenate-limit-chars: 6 3 3;
+  -webkit-hyphens: auto;
+}
+
 .md-typeset .grid.cards {
   grid-template-columns: repeat(auto-fit, minmax(15rem, 1fr));
   gap: var(--lupaxa-spacing-md);
   margin-top: 1.5rem;
-}
-
-.md-typeset .grid.cards.lupaxa-landing-grid {
-  grid-template-columns: repeat(3, minmax(0, 1fr));
-}
-
-@media screen {
-  .md-typeset .grid.cards > ul > li,
-  .md-typeset .grid.cards > li {
-    cursor: pointer;
-  }
-
-  .md-typeset .grid.cards a[href]::after {
-    content: "";
-    position: absolute;
-    inset: 0;
-    z-index: 1;
-  }
 }
 
 .md-typeset .grid.cards > ul {
@@ -35,19 +91,10 @@
 .md-typeset .grid.cards > li {
   position: relative;
   margin: 0;
-  padding: 0.9rem 1.4rem;
+  padding: var(--lupaxa-spacing-md);
   overflow: hidden;
   cursor: default;
-  background:
-    linear-gradient(
-      145deg,
-      color-mix(
-        in srgb,
-        var(--md-default-bg-color) 96%,
-        var(--lupaxa-blue)
-      ),
-      var(--md-default-bg-color)
-    );
+  background: linear-gradient(180deg, var(--lupaxa-card-bg-raised), var(--lupaxa-card-bg));
   border: 1px solid var(--md-default-fg-color--lightest);
   border-radius: var(--lupaxa-radius-card);
   box-shadow: var(--lupaxa-shadow-card);
@@ -64,17 +111,28 @@
       145deg,
       color-mix(
         in srgb,
-        var(--md-default-bg-color) 90%,
+        var(--lupaxa-card-bg-raised) 90%,
         var(--lupaxa-light-blue)
       ),
-      var(--md-default-bg-color)
+      var(--lupaxa-card-bg)
     );
   border-color: var(--lupaxa-card-hover-border);
   box-shadow: var(--lupaxa-shadow-card-hover);
 }
 
 .md-typeset .grid.cards strong {
-  font-size: 1.05rem;
+  font-size: 0.88rem;
+  font-weight: 700;
+  line-height: 1.35;
+}
+
+/* Body copy matches the project catalogue description. */
+.md-typeset .grid.cards:not(.catalogue-grid) > ul > li > p:not(:first-child),
+.md-typeset .grid.cards:not(.catalogue-grid) > li > p:not(:first-child) {
+  margin-top: 0.9rem;
+  margin-bottom: 0;
+  font-size: 0.76rem;
+  line-height: 1.45;
 }
 
 .md-typeset .grid.cards hr {
@@ -87,12 +145,23 @@
   color: var(--lupaxa-blue);
 }
 
+/* Icon sits beside a larger title. Middle-align would use the paragraph
+   font, which leaves the icon hanging below the title. */
+.md-typeset .grid.cards > ul > li > p:first-child:has(.twemoji),
+.md-typeset .grid.cards > li > p:first-child:has(.twemoji) {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  column-gap: 0.35rem;
+}
+
+.md-typeset .grid.cards > ul > li > p:first-child:has(.twemoji) .lg,
+.md-typeset .grid.cards > li > p:first-child:has(.twemoji) .lg {
+  margin-right: 0;
+}
+
 .md-typeset .grid.cards a,
-.md-typeset .grid.cards a:hover,
-.md-typeset .grid.cards a:focus,
-.md-typeset .grid.cards a:active,
 .md-typeset .catalogue-action {
-  color: var(--lupaxa-light-blue);
   cursor: pointer;
 }
 
@@ -101,18 +170,12 @@
 .md-typeset .grid.cards > ul > li > p:first-child svg,
 .md-typeset .grid.cards > li > p:first-child .twemoji,
 .md-typeset .grid.cards > li > p:first-child .lg,
-.md-typeset .grid.cards > li > p:first-child svg,
-.md-typeset .grid.cards > ul > li > h3:first-child .twemoji,
-.md-typeset .grid.cards > ul > li > h3:first-child svg,
-.md-typeset .grid.cards > li > h3:first-child .twemoji,
-.md-typeset .grid.cards > li > h3:first-child svg {
+.md-typeset .grid.cards > li > p:first-child svg {
   color: var(--lupaxa-light-blue);
 }
 
 .md-typeset .grid.cards > ul > li > p:first-child svg,
-.md-typeset .grid.cards > li > p:first-child svg,
-.md-typeset .grid.cards > ul > li > h3:first-child svg,
-.md-typeset .grid.cards > li > h3:first-child svg {
+.md-typeset .grid.cards > li > p:first-child svg {
   fill: currentcolor;
 }
 
@@ -127,7 +190,7 @@
 
 .md-typeset .grid.cards > ul > li > p:first-child,
 .md-typeset .grid.cards > li > p:first-child {
-  text-align: left;
+  text-align: center;
   hyphens: manual;
   -webkit-hyphens: manual;
 }
@@ -145,4 +208,79 @@
   box-shadow:
     0 0.1rem 0.4rem rgb(0 0 0 / 15%),
     0 0.4rem 1.2rem rgb(0 0 0 / 12%);
+}
+
+/* Home lists one card per category. */
+.md-typeset .grid.cards.lupaxa-landing-grid {
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+}
+
+/* Home and category cards: bold default-colour title, icon beside it,
+   no rule under the title. */
+.md-typeset .lupaxa-landing-grid > ul > li > p:first-child,
+.md-typeset .lupaxa-landing-grid > li > p:first-child,
+.md-typeset .lupaxa-page-card .grid.cards > ul > li > p:first-child,
+.md-typeset .lupaxa-page-card .grid.cards > li > p:first-child {
+  margin: 0;
+}
+
+.md-typeset .lupaxa-landing-grid > ul > li > p:first-child strong,
+.md-typeset .lupaxa-landing-grid > li > p:first-child strong,
+.md-typeset .lupaxa-landing-grid > ul > li > p:first-child a,
+.md-typeset .lupaxa-landing-grid > li > p:first-child a,
+.md-typeset .lupaxa-page-card .grid.cards > ul > li > p:first-child strong,
+.md-typeset .lupaxa-page-card .grid.cards > li > p:first-child strong,
+.md-typeset .lupaxa-page-card .grid.cards > ul > li > p:first-child a,
+.md-typeset .lupaxa-page-card .grid.cards > li > p:first-child a {
+  color: var(--md-default-fg-color);
+  font-size: 0.88rem;
+  font-weight: 700;
+  line-height: 1.35;
+  text-decoration: none;
+}
+
+.md-typeset .lupaxa-landing-grid > ul > li > p:first-child a:hover,
+.md-typeset .lupaxa-landing-grid > ul > li > p:first-child a:focus-visible,
+.md-typeset .lupaxa-landing-grid > li > p:first-child a:hover,
+.md-typeset .lupaxa-landing-grid > li > p:first-child a:focus-visible,
+.md-typeset .lupaxa-page-card .grid.cards > ul > li > p:first-child a:hover,
+.md-typeset .lupaxa-page-card .grid.cards > ul > li > p:first-child a:focus-visible,
+.md-typeset .lupaxa-page-card .grid.cards > li > p:first-child a:hover,
+.md-typeset .lupaxa-page-card .grid.cards > li > p:first-child a:focus-visible {
+  color: var(--md-default-fg-color);
+  text-decoration: none;
+}
+
+/* Category pages: tool cards sit inside the one page card.
+   The title link stretches across the card, so the description is part of the hit area. */
+.md-typeset .lupaxa-page-card > .grid.cards {
+  margin-bottom: 0;
+}
+
+.md-typeset .lupaxa-page-card .grid.cards > ul > li,
+.md-typeset .lupaxa-page-card .grid.cards > li {
+  cursor: pointer;
+}
+
+.md-typeset .lupaxa-page-card .grid.cards > ul > li > p:first-child a::after,
+.md-typeset .lupaxa-page-card .grid.cards > li > p:first-child a::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+}
+
+.md-typeset .lupaxa-page-card .grid.cards > ul > li,
+.md-typeset .lupaxa-page-card .grid.cards > li {
+  background: var(--lupaxa-dark-blue);
+}
+
+.md-typeset .lupaxa-page-card .grid.cards > ul > li:hover,
+.md-typeset .lupaxa-page-card .grid.cards > li:hover {
+  background:
+    linear-gradient(
+      145deg,
+      color-mix(in srgb, var(--lupaxa-dark-blue) 88%, var(--lupaxa-light-blue)),
+      var(--lupaxa-dark-blue)
+    );
 }

@@ -13,7 +13,10 @@ categories:
     tools:
       - id: base-n
         title: Base N
-        summary: Encode and decode text in Base 16, 32, 58, 64, or 85.
+        summary: >
+          Encode text as Base 16, Base 32, Base 58, Base 64, or Base 85, and
+          decode that text back. Choose the alphabet, paste the value, and
+          the page writes the other form. Base 64 is the default.
         status: ready
         actions:
           - id: encode
@@ -38,7 +41,11 @@ categories:
                 label: Base 85
       - id: url-encode-decode
         title: URL Encode/Decode
-        summary: Encode and decode text for a URL component.
+        summary: >
+          Percent-encode text so it is safe in a URL query or path, and decode
+          a percent-encoded value back to text. Spaces, reserved characters,
+          and characters outside ASCII become % sequences. The page uses the
+          same rules as a URL component.
         status: ready
         actions:
           - id: encode
@@ -47,7 +54,10 @@ categories:
             label: Decode
       - id: hex
         title: Hexadecimal
-        summary: Encode and decode hexadecimal text.
+        summary: >
+          Encode text as hexadecimal, two digits for each byte, and decode a
+          hexadecimal string back to text. Spaces in the hex are ignored when
+          decoding. The result is UTF-8 text.
         status: ready
         actions:
           - id: encode
@@ -56,7 +66,10 @@ categories:
             label: Decode
       - id: binary
         title: Binary
-        summary: Encode and decode binary text.
+        summary: >
+          Encode text as binary, eight bits for each byte, and decode a binary
+          string back to text. Spaces in the bits are ignored when decoding.
+          The result is UTF-8 text.
         status: ready
         actions:
           - id: encode
@@ -65,7 +78,10 @@ categories:
             label: Decode
       - id: octal
         title: Octal
-        summary: Encode and decode octal text.
+        summary: >
+          Encode text as octal, three digits for each byte, and decode an
+          octal string back to text. Spaces in the digits are ignored when
+          decoding. A group above 255 is rejected.
         status: ready
         actions:
           - id: encode
@@ -74,7 +90,11 @@ categories:
             label: Decode
       - id: jwt-decoder
         title: JWT Decoder
-        summary: Decode a JWT header and payload.
+        summary: >
+          Paste a JSON Web Token. The page splits the three dot-separated
+          parts and shows the header and the payload as formatted JSON, with
+          the signature left as the raw third part. It does not check the
+          signature or whether the token has expired.
         status: ready
         actions:
           - id: decode
@@ -90,7 +110,9 @@ categories:
     tools:
       - id: hash-generator
         title: Hash Generator
-        summary: Generate a hash of text you paste in.
+        summary: >
+          Hash text you paste in with SHA-256, SHA-384, or SHA-512. The digest
+          is calculated in the page. The text is not uploaded.
         status: ready
         actions:
           - id: sha-256
@@ -101,7 +123,11 @@ categories:
             label: SHA-512
       - id: certificate-generator
         title: Certificate Generator
-        summary: Create a certificate in the browser.
+        summary: >
+          Create a self-signed certificate in the page. Set the common name,
+          how many days it stays valid, and a key type: RSA 2048, RSA 3072,
+          RSA 4096, ECDSA P-256, or ECDSA P-384. The page writes the
+          certificate request, the certificate, and the private key.
         status: ready
         fields:
           - id: common-name
@@ -138,7 +164,11 @@ categories:
             label: Private key
       - id: csr-generator
         title: CSR Generator
-        summary: Create a certificate signing request in the browser.
+        summary: >
+          Create a certificate signing request in the page. Set the common
+          name and a key type: RSA 2048, RSA 3072, RSA 4096, ECDSA P-256, or
+          ECDSA P-384. The page writes the request and the matching private
+          key.
         status: ready
         fields:
           - id: common-name
@@ -169,14 +199,20 @@ categories:
             label: Private key
       - id: certificate-inspector
         title: Certificate Inspector
-        summary: Read the fields in a certificate you paste in.
+        summary: >
+          Paste a PEM certificate. The page reads the subject, issuer, serial
+          number, not-before and not-after times, signature algorithm, and
+          public key. It does not contact a certificate authority.
         status: ready
         actions:
           - id: inspect
             label: Inspect
       - id: pem-der-converter
         title: PEM/DER Converter
-        summary: Convert a certificate between PEM and DER.
+        summary: >
+          Convert a PEM certificate to Base64-encoded DER, and convert that
+          Base64 DER back to a PEM certificate. Paste one form and the page
+          writes the other.
         status: ready
         actions:
           - id: to-der
@@ -196,7 +232,11 @@ categories:
     tools:
       - id: dns-lookup
         title: DNS Lookup
-        summary: Look up DNS records for a name.
+        summary: >
+          Look up DNS records for a name. Choose A, AAAA, CNAME, MX, NS, TXT,
+          SOA, CAA, or SRV, and a resolver: Cloudflare, Google, or Quad9. The
+          page shows each answer with its name, TTL, and data. This site sends
+          the name to that resolver and does not store the query.
         status: ready
         fields:
           - id: name
@@ -244,7 +284,11 @@ categories:
             label: Result
       - id: reverse-dns
         title: Reverse DNS
-        summary: Look up the name for an IP address.
+        summary: >
+          Look up the PTR name for an IP address. Choose Cloudflare, Google,
+          or Quad9 as the resolver. The page shows each answer with its name,
+          TTL, and data. This site sends the address to that resolver and does
+          not store the query.
         status: ready
         fields:
           - id: name
@@ -269,7 +313,11 @@ categories:
             label: Result
       - id: mx-lookup
         title: MX Lookup
-        summary: Look up mail servers for a domain.
+        summary: >
+          Look up the mail servers for a domain. The page lists each MX record
+          as a preference and a host, lowest preference first. Choose
+          Cloudflare, Google, or Quad9. This site sends the name to that
+          resolver and does not store the query.
         status: ready
         fields:
           - id: name
@@ -294,7 +342,12 @@ categories:
             label: Result
       - id: spf-inspector
         title: SPF Inspector
-        summary: Read a domain's SPF record.
+        summary: >
+          Read the SPF policy published as a TXT record for a domain. The page
+          lists each mechanism with its qualifier: pass, fail, softfail, or
+          neutral. It reports when the domain has no SPF record or more than
+          one. Choose Cloudflare, Google, or Quad9. This site sends the name
+          to that resolver and does not store the query.
         status: ready
         fields:
           - id: name
@@ -319,7 +372,12 @@ categories:
             label: Result
       - id: dmarc-inspector
         title: DMARC Inspector
-        summary: Read a domain's DMARC record.
+        summary: >
+          Read the DMARC policy published at _dmarc for a domain. The page
+          explains the policy, the subdomain policy, DKIM and SPF alignment,
+          and the report fields. It reports when the domain has no DMARC
+          record or more than one. Choose Cloudflare, Google, or Quad9. This
+          site sends the name to that resolver and does not store the query.
         status: ready
         fields:
           - id: name
@@ -344,7 +402,12 @@ categories:
             label: Result
       - id: dnssec-inspector
         title: DNSSEC Inspector
-        summary: Check DNSSEC for a domain.
+        summary: >
+          Check DNSSEC for a domain. The page asks the resolver to validate
+          the SOA record and reports Authenticated, No DNSSEC, Validation
+          failed, or Name does not exist. It also lists the DNSKEY and DS
+          records. Choose Cloudflare, Google, or Quad9. This site sends the
+          name to that resolver and does not store the query.
         status: ready
         fields:
           - id: name
@@ -378,7 +441,10 @@ categories:
     tools:
       - id: json-formatter
         title: JSON Formatter
-        summary: Format JSON text.
+        summary: >
+          Format JSON with a two-space indent, or minify it onto one line.
+          Paste the text and the page writes the result. Invalid JSON is
+          reported instead of being rewritten.
         status: ready
         actions:
           - id: format
@@ -387,7 +453,10 @@ categories:
             label: Minify
       - id: yaml-formatter
         title: YAML Formatter
-        summary: Format YAML text.
+        summary: >
+          Format YAML as a block with a two-space indent, or minify it to a
+          compact flow. Paste the text and the page writes the result. Invalid
+          YAML is reported instead of being rewritten.
         status: ready
         actions:
           - id: format
@@ -396,7 +465,10 @@ categories:
             label: Minify
       - id: json-yaml
         title: "JSON ↔ YAML"
-        summary: Convert JSON to YAML and YAML to JSON.
+        summary: >
+          Convert JSON to YAML, and YAML to JSON. Paste one form and the page
+          writes the other, with JSON indented by two spaces. The text stays
+          in the browser.
         status: ready
         actions:
           - id: to-yaml
@@ -405,7 +477,10 @@ categories:
             label: To JSON
       - id: csv-json
         title: "CSV ↔ JSON"
-        summary: Convert CSV to JSON and JSON to CSV.
+        summary: >
+          Convert CSV to a JSON list of objects, and a JSON list of objects
+          back to CSV. The first CSV row is the header, and a repeated header
+          name is rejected. The text stays in the browser.
         status: ready
         actions:
           - id: to-json
@@ -414,7 +489,10 @@ categories:
             label: To CSV
       - id: csv-yaml
         title: "CSV ↔ YAML"
-        summary: Convert CSV to YAML and YAML to CSV.
+        summary: >
+          Convert CSV to a YAML list of objects, and a YAML list of objects
+          back to CSV. The first CSV row is the header, and a repeated header
+          name is rejected. The text stays in the browser.
         status: ready
         actions:
           - id: to-yaml
@@ -423,7 +501,10 @@ categories:
             label: To CSV
       - id: xml-formatter
         title: XML Formatter
-        summary: Format XML text.
+        summary: >
+          Format XML with an indent for each nested element, or minify it onto
+          one line. Paste the text and the page writes the result. Invalid XML
+          is reported instead of being rewritten.
         status: ready
         actions:
           - id: format
@@ -443,7 +524,11 @@ categories:
     tools:
       - id: uuid-generator
         title: UUID Generator
-        summary: Generate a UUID.
+        summary: >
+          Generate a version 4 or version 7 UUID, and choose how many, from 1
+          to 20. Version 4 is random. Version 7 starts with the current time
+          so newer identifiers sort later. The page uses the browser's random
+          source.
         status: ready
         actions:
           - id: generate
@@ -469,14 +554,22 @@ categories:
             label: Result
       - id: cron-parser
         title: Cron Parser
-        summary: Explain a cron expression.
+        summary: >
+          Explain a five-field cron expression: minute, hour, day of month,
+          month, and day of week. The page describes each field and lists the
+          next five run times in UTC, looking up to four years ahead. Names
+          such as JAN and MON are accepted.
         status: ready
         actions:
           - id: explain
             label: Explain
       - id: regex-tester
         title: Regex Tester
-        summary: Try a regular expression against text.
+        summary: >
+          Try a regular expression against sample text. Write the pattern on
+          its own, or as /pattern/flags. The flags g, i, m, s, and u are
+          accepted, and g is used when you omit flags. The page lists each
+          match and its capture groups.
         status: ready
         actions:
           - id: test
@@ -493,7 +586,11 @@ categories:
             label: Result
       - id: timestamp-converter
         title: Timestamp Converter
-        summary: Convert between timestamps and calendar dates.
+        summary: >
+          Convert a Unix timestamp to a UTC date, and a UTC date to a Unix
+          timestamp in seconds. A timestamp of up to 10 digits is seconds. A
+          longer one, up to 13 digits, is milliseconds. Dates use the form
+          2026-01-02T03:04:05Z, with milliseconds optional.
         status: ready
         actions:
           - id: to-date
@@ -502,7 +599,11 @@ categories:
             label: To Timestamp
       - id: semver-calculator
         title: SemVer Calculator
-        summary: Compare and step semantic versions.
+        summary: >
+          Compare two semantic versions, including a pre-release, and say
+          which is newer or that they are equal. Or step one version by major,
+          minor, or patch. A patch step on a pre-release drops the
+          pre-release and keeps the same core version.
         status: ready
         fields:
           - id: version
@@ -541,21 +642,33 @@ categories:
     tools:
       - id: actions-yaml-validator
         title: Actions YAML Validator
-        summary: Check a GitHub Actions workflow file.
+        summary: >
+          Check a GitHub Actions workflow file you paste in. The page requires
+          valid YAML, an on trigger, and at least one job. Each job needs
+          runs-on or uses, and each step needs uses or run. A pasted file
+          stays on this machine.
         status: ready
         actions:
           - id: check
             label: Check
       - id: dependabot-validator
         title: Dependabot Validator
-        summary: Check a Dependabot config file.
+        summary: >
+          Check a Dependabot config file you paste in. The page requires valid
+          YAML, version 2, and a list of updates. Each update needs a package
+          ecosystem, a directory, and a schedule interval of daily, weekly, or
+          monthly. A pasted file stays on this machine.
         status: ready
         actions:
           - id: check
             label: Check
       - id: workflow-inspector
         title: Workflow Inspector
-        summary: Inspect a GitHub Actions workflow file.
+        summary: >
+          Read a GitHub Actions workflow you paste in and show how it is put
+          together. The page lists the name, the triggers, the permissions,
+          the concurrency setting, and each job with its steps. A pasted file
+          stays on this machine.
         status: ready
         actions:
           - id: check

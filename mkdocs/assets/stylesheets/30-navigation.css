@@ -12,7 +12,7 @@
   top: 0;
   z-index: 10;
   color: var(--lupaxa-white);
-  background-color: var(--lupaxa-blue);
+  background: linear-gradient(180deg, var(--lupaxa-card-bg-raised), var(--lupaxa-card-bg));
 }
 
 .md-header__inner {
@@ -37,8 +37,8 @@
 .md-header__button.md-logo.lupaxa-header__logo {
   display: inline-flex;
   flex: 0 0 auto;
-  width: 4rem;
-  height: 4rem;
+  width: 64px;
+  height: 64px;
   align-items: center;
   justify-content: center;
   margin: 0 0.75rem 0 0;
@@ -49,8 +49,8 @@
 .md-header__button.md-logo.lupaxa-header__logo img,
 .md-header__button.md-logo.lupaxa-header__logo svg {
   display: block;
-  width: 4rem;
-  height: 4rem;
+  width: 64px;
+  height: 64px;
   max-width: none;
   max-height: none;
   object-fit: contain;
@@ -93,9 +93,9 @@
   display: flex;
   height: 100%;
   align-items: center;
-  padding: 0 1rem;
+  padding: 0 0.75rem;
   color: rgb(255 255 255 / 72%);
-  font-size: 1rem;
+  font-size: 0.85rem;
   font-weight: 500;
   line-height: 1.2;
   white-space: nowrap;
@@ -104,15 +104,12 @@
   border-radius: 0;
   box-shadow: none;
   pointer-events: auto;
-  transition:
-    color var(--lupaxa-transition-fast),
-    font-weight var(--lupaxa-transition-fast);
+  transition: color var(--lupaxa-transition-fast);
 }
 
 .lupaxa-header__nav-link:hover,
 .lupaxa-header__nav-link:focus-visible {
   color: var(--lupaxa-white);
-  font-weight: 700;
   background: none;
   box-shadow: none;
 }
@@ -128,6 +125,8 @@
   text-decoration: none;
 }
 
+.lupaxa-header__nav-link:hover .lupaxa-header__nav-label,
+.lupaxa-header__nav-link:focus-visible .lupaxa-header__nav-label,
 .lupaxa-header__nav-item--active .lupaxa-header__nav-label {
   text-decoration: underline;
   text-decoration-color: var(--lupaxa-light-blue);
@@ -209,4 +208,3 @@
   border-radius: var(--lupaxa-radius-pill);
   padding: 0.15rem 0.7rem;
 }
-

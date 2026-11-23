@@ -57,7 +57,8 @@ def test_actions_and_summaries() -> None:
     assert len(tools) == len(EXPECTED)
     for tool in tools:
         assert isinstance(tool.summary, str)
-        assert tool.summary != ""
+        assert tool.summary.count(".") >= 2
+        assert len(tool.summary) >= 120
         if tool.id == "jwt-decoder":
             assert tuple((action.id, action.label) for action in tool.actions) == (
                 ("decode", "Decode"),

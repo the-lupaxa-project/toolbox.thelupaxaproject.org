@@ -7,6 +7,7 @@ from pathlib import Path
 import pytest
 
 from tools_lib import (
+    _TOOL_ICONS,
     CatalogueError,
     build_nav,
     load_catalogue,
@@ -33,12 +34,11 @@ def test_render_base_n_page_contains_widget() -> None:
     assert 'class="tool-input"' in page
     assert 'data-action="encode"' in page
     assert 'data-action="decode"' in page
-    assert "Encode and decode text in Base 16, 32, 58, 64, or 85." in page
+    assert "Encode text as Base 16, Base 32, Base 58, Base 64, or Base 85" in page
+    assert "Base 64 is the default." in page
     assert 'class="tool-output"' in page
     assert 'class="tool-copy" disabled' in page
-    assert (
-        'Encode and decode text in Base 16, 32, 58, 64, or 85.\n\n<div class="tool-widget"'
-    ) in page
+    assert 'Base 64 is the default.\n\n<div class="tool-widget"' in page
     assert page.index('class="tool-input"') < page.index('class="tool-actions"')
     assert page.index('class="tool-actions"') < page.index('data-field="base"')
     assert page.index('data-field="base"') < page.index('data-action="encode"')
@@ -210,13 +210,15 @@ def test_render_home_links_to_six_category_pages() -> None:
     assert 'src="assets/images/brand/hero-logo.png"' in page
     assert "Lupaxa Web Toolbox" in page
     assert "Browser tools for encoding, cryptography, DNS, data, development, and GitHub." in page
-    note = page.index("lupaxa-privacy-note")
+    heading = page.index("## In Your Browser")
+    note = page.index("about-introduction")
+    tools_heading = page.index("## Tools")
     grid = page.index("lupaxa-landing-grid")
-    assert page.index("lupaxa-hero") < note < grid
-    title = page.index("lupaxa-privacy-note__title")
-    rule = page.index("<hr>", title)
-    body = page.index("Every tool on this site", title)
-    assert title < rule < body
+    assert page.index("lupaxa-hero") < heading < note < tools_heading < grid
+    body = page.index("Every tool on this site", note)
+    assert note < body < tools_heading
+    assert "lupaxa-privacy-note" not in page
+    assert "<hr>" not in page
     assert "In Your Browser" in page
     assert "Nothing you paste into those tools is uploaded or stored on a server" in page
     assert (
@@ -225,6 +227,13 @@ def test_render_home_links_to_six_category_pages() -> None:
     )
     assert "keys, tokens, and other private material remain under your control." in page
     assert "lupaxa-landing-grid" in page
+    assert "---" not in page[grid:]
+    assert ":material-code-braces:{ .lg .middle } **[Encoding]" in page
+    assert ":material-shield-lock-outline:{ .lg .middle } **[Cryptography]" in page
+    assert ":material-dns:{ .lg .middle } **[DNS]" in page
+    assert ":material-database-outline:{ .lg .middle } **[Data]" in page
+    assert ":material-console:{ .lg .middle } **[Development]" in page
+    assert ":material-github:{ .lg .middle } **[GitHub]" in page
     assert page.count("**[") == 6
     assert "[Encoding](encoding/index.md)" in page
     assert "[GitHub](github/index.md)" in page
@@ -234,6 +243,7 @@ def test_render_home_links_to_six_category_pages() -> None:
 
 def test_category_pages_describe_the_tools_on_offer() -> None:
     tools = load_catalogue(CATALOGUE)
+    assert set(_TOOL_ICONS) == {tool.id for tool in tools}
     seen: set[str] = set()
     for category_id in ("encoding", "cryptography", "dns", "data", "development", "github"):
         category_tools = [tool for tool in tools if tool.category_id == category_id]
@@ -256,10 +266,17 @@ def test_category_pages_describe_the_tools_on_offer() -> None:
         if category_id == "development":
             assert "A value stays on this machine." in page
             assert "SemVer Calculator" in page
+        assert '<div class="lupaxa-page-card" markdown>' in page
         assert f'{description.rstrip(chr(10))}\n\n<div class="grid cards" markdown>' in page
+        grid_at = page.index('<div class="grid cards" markdown>')
+        assert page.index("</div>", grid_at) < page.rindex("</div>")
         assert "\n\n\n" not in page
+        assert page.count("---") == 2
+        assert "    ---" not in page
         for tool in category_tools:
             assert tool.title in description
+            icon = _TOOL_ICONS[tool.id]
+            assert f":{icon}:{{ .lg .middle }} **[{tool.title}]" in page
         titles = sorted((tool.title for tool in category_tools), key=str.casefold)
         positions = [page.index(f"**[{title}]") for title in titles]
         assert positions == sorted(positions)
@@ -275,9 +292,11 @@ def test_build_nav_is_home_plus_six_sections() -> None:
         "DNS",
         "Encoding",
         "GitHub",
+        "Sponsor",
     ]
     assert nav[0] == {"Home": "index.md"}
-    for item in nav[1:]:
+    assert nav[-1] == {"Sponsor": "sponsor.md"}
+    for item in nav[1:-1]:
         children = next(iter(item.values()))
         tool_titles = [next(iter(child)) for child in children[1:]]
         assert tool_titles == sorted(tool_titles, key=str.casefold)
@@ -291,7 +310,8 @@ def test_build_nav_is_home_plus_six_sections() -> None:
         "Octal",
         "URL Encode/Decode",
     ]
-    assert nav[-1]["GitHub"][-1] == {"Workflow Inspector": "github/workflow-inspector.md"}
+    github = next(item["GitHub"] for item in nav if "GitHub" in item)
+    assert github[-1] == {"Workflow Inspector": "github/workflow-inspector.md"}
 
 
 def test_write_generated_pages_writes_pages_and_drops_stale_file(tmp_path: Path) -> None:
@@ -434,14 +454,14 @@ def test_strict_build_contains_widget_and_planned_sentence() -> None:
     assert 'href="github/"' in home
     assert 'href="tools/' not in home
     assert 'id="encoding"' not in home
-    assert home.count("lupaxa-header__nav-link") == 7
+    assert home.count("lupaxa-header__nav-link") == 8
+    assert 'href="sponsor/"' in home
 
     header = (ROOT / "overrides" / "partials" / "header.html").read_text(encoding="utf-8")
-    nav_link_at = header.index('class="lupaxa-header__nav-link"')
-    href_at = header.index('href="', nav_link_at)
-    section_link = header[href_at : header.index('"', href_at + 6) + 1]
-    assert "nav_item.children[0].url" in section_link
-    assert "#{{" not in section_link
+    assert "first_nav_url" in header
+    assert "data-nav-prefixes" in header
+    assert "nav_item.children[0].url" not in header
+    assert "#{{" not in header
 
 
 def test_built_encoding_page_loads_scripts() -> None:
