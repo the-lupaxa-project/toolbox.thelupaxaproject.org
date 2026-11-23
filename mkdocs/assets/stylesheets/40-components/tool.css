@@ -23,6 +23,9 @@
   justify-content: flex-end;
   align-items: center;
   gap: var(--lupaxa-spacing-sm);
+  /* Widget gap is 10px. The extra 10px makes 20px above and below. */
+  margin-top: 10px;
+  margin-bottom: 10px;
 }
 
 .tool-actions .tool-field {
@@ -48,6 +51,12 @@
 
 .tool-copy {
   align-self: flex-end;
+  margin-top: 10px;
+  margin-bottom: 10px;
+}
+
+.tool-widget > .tool-copy:last-of-type {
+  margin-bottom: 0;
 }
 
 .tool-actions button:hover,
@@ -75,9 +84,16 @@
 }
 
 .tool-error {
-  min-height: 1.5rem;
   margin: 0;
   color: var(--lupaxa-light-blue);
+}
+
+.tool-error:not(:empty) {
+  margin-top: 10px;
+}
+
+.tool-error:empty {
+  display: none;
 }
 
 .tool-field {
