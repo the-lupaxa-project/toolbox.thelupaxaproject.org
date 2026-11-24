@@ -19,8 +19,13 @@ def test_sponsor_page_states_time_then_costs_and_embeds_kofi():
     assert "\n# Sponsor\n" not in SPONSOR_MD
     assert "\n    ---\n" not in SPONSOR_MD
     assert (
-        'src="https://ko-fi.com/thelupaxaproject/?hidefeed=true&widget=true&embed=true"'
+        'data-src="https://ko-fi.com/thelupaxaproject/?hidefeed=true&widget=true&embed=true"'
     ) in SPONSOR_MD
+    assert ' src="' not in SPONSOR_MD
+    assert "sponsor-widget-open" in SPONSOR_MD
+    assert "Open Ko-fi Widget" in SPONSOR_MD
+    assert "Open our Ko-fi Page" in SPONSOR_MD
+    assert "assets/javascript/sponsor.js" in MKDOCS_YML
     assert 'aria-label="Support The Lupaxa Project on Ko-fi"' in SPONSOR_MD
     assert "title=" not in SPONSOR_MD
     assert 'href="https://ko-fi.com/thelupaxaproject"' in SPONSOR_MD

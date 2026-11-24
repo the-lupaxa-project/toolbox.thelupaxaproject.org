@@ -117,64 +117,9 @@
   padding: 0.7rem 0.85rem;
 }
 
-.tool-shortcuts {
-  padding-left: 2rem;
-}
-
-.tool-shortcuts__title {
-  margin: 0 0 0.75rem;
-  color: var(--md-default-fg-color);
-  font-size: 1.05rem;
-  font-weight: 700;
-  line-height: 1.3;
-}
-
-.tool-shortcuts__list {
-  margin: 0;
-  padding: 0;
-  list-style: none;
-}
-
-.tool-shortcuts__item + .tool-shortcuts__item {
-  margin-top: 0.15rem;
-}
-
-.tool-shortcuts__link {
-  display: block;
-  padding: 0.2rem 0;
-  color: var(--md-default-fg-color);
-  font-size: 0.8rem;
-  font-weight: 500;
-  line-height: 1.4;
-  text-decoration: none;
-  transition: color var(--lupaxa-transition-fast);
-}
-
-.tool-shortcuts__link:hover,
-.tool-shortcuts__link:focus-visible,
-.tool-shortcuts__link--active,
-.tool-shortcuts__link--active:hover,
-.tool-shortcuts__link--active:focus-visible {
-  color: var(--md-default-fg-color);
-  font-weight: 700;
-  text-decoration: underline;
-  text-decoration-color: var(--lupaxa-light-blue);
-  text-decoration-thickness: 2px;
-  text-underline-offset: 0.12em;
-  text-decoration-skip-ink: auto;
-}
-
 .md-typeset .lupaxa-page-card .tool-widget p,
 .md-typeset .lupaxa-page-card .tool-error {
   text-align: left;
   hyphens: manual;
   -webkit-hyphens: manual;
-}
-
-/* Wide screens keep the category shortcut list. The drawer takes over
-   at the same width the header links fold away. */
-@media screen and (max-width: 68em) {
-  .md-sidebar--secondary:has(.tool-shortcuts) {
-    display: none !important;
-  }
 }

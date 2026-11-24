@@ -372,20 +372,21 @@ def test_strict_build_contains_widget_and_planned_sentence() -> None:
     assert "md-sidebar--primary" in base_n_html
     assert "lupaxa-header__drawer-button" in base_n_html
     assert "hide-primary-sidebar.css" in base_n_html
-    shortcuts = base_n_html.split("tool-shortcuts", 1)[1].split("</nav>", 1)[0]
-    active = shortcuts.split("tool-shortcuts__link--active", 1)[1].split("</a>", 1)[0]
-    assert "Encoding Tools" in shortcuts
+    assert "md-sidebar--secondary" not in base_n_html
+    assert "tool-shortcuts" not in base_n_html
+    encoding_menu = base_n_html.split(">Encoding</span>", 1)[1].split("</ul>", 1)[0]
+    active = encoding_menu.split("lupaxa-header__menu-link--active", 1)[1].split("</a>", 1)[0]
     assert "Base N" in active
-    assert "Hexadecimal" in shortcuts
-    assert "URL Encode/Decode" in shortcuts
-    assert "JWT Decoder" in shortcuts
-    assert "Binary" in shortcuts
-    assert "Octal" in shortcuts
-    assert "Base 16" not in shortcuts
-    assert "Base 32" not in shortcuts
-    assert "Base 58" not in shortcuts
-    assert "Base 85" not in shortcuts
-    assert "Base64" not in shortcuts
+    assert "Hexadecimal" in encoding_menu
+    assert "URL Encode/Decode" in encoding_menu
+    assert "JWT Decoder" in encoding_menu
+    assert "Binary" in encoding_menu
+    assert "Octal" in encoding_menu
+    assert "Base 16" not in encoding_menu
+    assert "Base 32" not in encoding_menu
+    assert "Base 58" not in encoding_menu
+    assert "Base 85" not in encoding_menu
+    assert "Base64" not in encoding_menu
     assert "tools/base64.js" not in base_n_html
     assert "tools/base-16.js" not in base_n_html
     assert "tools/base-32.js" not in base_n_html
@@ -393,7 +394,7 @@ def test_strict_build_contains_widget_and_planned_sentence() -> None:
     assert "tools/base-85.js" not in base_n_html
     assert "tools/binary.js" in base_n_html
     assert "tools/octal.js" in base_n_html
-    assert "Hash Generator" not in shortcuts
+    assert "Hash Generator" not in encoding_menu
 
     hash_generator = ROOT / "site" / "cryptography" / "hash-generator" / "index.html"
     assert hash_generator.is_file()

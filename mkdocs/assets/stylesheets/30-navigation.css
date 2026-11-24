@@ -10,7 +10,8 @@
 .md-header {
   position: sticky;
   top: 0;
-  z-index: 10;
+  z-index: 20;
+  overflow: visible;
   color: var(--lupaxa-white);
   background: linear-gradient(180deg, var(--lupaxa-card-bg-raised), var(--lupaxa-card-bg));
 }
@@ -79,12 +80,99 @@
 }
 
 .lupaxa-header__nav-item {
+  position: relative;
   display: flex;
   height: 100%;
   align-items: stretch;
   margin: 0;
   padding: 0;
   pointer-events: auto;
+}
+
+/* Child pages of a header section. Hidden until the section is hovered. */
+
+.lupaxa-header__menu {
+  position: absolute;
+  top: calc(100% - 0.35rem);
+  /* Same inset as the header label, so the panel lines up with the text. */
+  left: 0.75rem;
+  z-index: 30;
+  display: none;
+  min-width: 12rem;
+  margin: 0;
+  padding: 0.35rem;
+  list-style: none;
+  background: var(--lupaxa-card-bg);
+  border: 1px solid color-mix(in srgb, var(--lupaxa-light-blue) 28%, transparent);
+  border-radius: var(--lupaxa-radius-button);
+  box-shadow: var(--lupaxa-shadow-panel);
+}
+
+/* Upward caret, 20px in from the panel's left edge. */
+.lupaxa-header__menu::before,
+.lupaxa-header__menu::after {
+  content: "";
+  position: absolute;
+  width: 0;
+  height: 0;
+  border-style: solid;
+  border-right-color: transparent;
+  border-left-color: transparent;
+}
+
+.lupaxa-header__menu::before {
+  top: -11px;
+  left: 20px;
+  border-width: 0 7px 11px 7px;
+  border-bottom-color: color-mix(in srgb, var(--lupaxa-light-blue) 28%, transparent);
+}
+
+.lupaxa-header__menu::after {
+  top: -10px;
+  left: 21px;
+  border-width: 0 6px 10px 6px;
+  border-bottom-color: var(--lupaxa-card-bg);
+}
+
+.lupaxa-header__nav-item--menu:hover > .lupaxa-header__menu,
+.lupaxa-header__nav-item--menu:focus-within > .lupaxa-header__menu {
+  display: block;
+}
+
+/* Stay closed after a click until the pointer leaves the section. */
+
+html.lupaxa-header-menu-dismissed .lupaxa-header__nav-item--menu:hover > .lupaxa-header__menu,
+html.lupaxa-header-menu-dismissed .lupaxa-header__nav-item--menu:focus-within > .lupaxa-header__menu {
+  display: none;
+}
+
+.lupaxa-header__menu-item {
+  margin: 0;
+  padding: 0;
+}
+
+.lupaxa-header__menu-link {
+  display: block;
+  /* Same inset as the menu padding on every side, so the label sits as
+     far inside the hover as the hover sits inside the panel. */
+  padding: 0.35rem;
+  color: rgb(255 255 255 / 82%);
+  font-size: 0.85rem;
+  font-weight: 500;
+  line-height: 1.3;
+  text-decoration: none;
+  border-radius: var(--lupaxa-radius-sm);
+}
+
+.lupaxa-header__menu-link:hover,
+.lupaxa-header__menu-link:focus-visible,
+.lupaxa-header__menu-link--active {
+  color: var(--lupaxa-white);
+  background: var(--lupaxa-card-bg-raised);
+}
+
+.lupaxa-header__menu-link--active {
+  font-weight: 700;
 }
 
 .lupaxa-header__nav-link {

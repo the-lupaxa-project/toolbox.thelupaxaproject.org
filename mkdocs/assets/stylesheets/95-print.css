@@ -70,6 +70,7 @@
   }
 
   /* Same stack as the narrow screen: one card across the page. */
+  .md-typeset .grid.cards.legal-notice,
   .md-typeset .grid.cards.sponsor-reasons {
     display: grid;
     grid-template-columns: minmax(0, 1fr);
@@ -92,6 +93,29 @@
     display: contents;
   }
 
+  /* A grid, or a list with display:contents, does not fragment in print.
+     Chrome then leaves a blank first page and starts the notice on page 2.
+     These pages are one block of text, so print them as ordinary flow. */
+  .md-typeset .grid.cards.legal-notice,
+  .md-typeset .grid.cards.legal-notice > ul {
+    display: block;
+    margin: 0;
+    break-before: auto;
+    page-break-before: auto;
+  }
+
+  .md-typeset .grid.cards.legal-notice > ul {
+    padding: 0;
+    list-style: none;
+  }
+
+  .md-typeset .grid.cards.legal-notice > li,
+  .md-typeset .grid.cards.legal-notice > ul > li {
+    display: block;
+    break-before: auto;
+    page-break-before: auto;
+  }
+
   .md-typeset .grid.cards > ul > li,
   .md-typeset .grid.cards > ol > li,
   .md-typeset .grid.cards > li,
@@ -110,6 +134,12 @@
     box-shadow: none;
     break-inside: avoid;
     page-break-inside: avoid;
+  }
+
+  .md-typeset .grid.cards.legal-notice > ul > li,
+  .md-typeset .grid.cards.legal-notice > li {
+    break-inside: auto;
+    page-break-inside: auto;
   }
 
   .md-typeset .catalogue-grid img.catalogue-logo {
@@ -293,7 +323,8 @@
   .sponsor-widget,
   .sponsor-widget-frame,
   .sponsor-widget iframe,
-  #kofiframe {
+  #kofiframe,
+  [data-analytics-choice] {
     display: none !important;
     visibility: hidden !important;
     height: 0 !important;
@@ -396,6 +427,9 @@
   .md-typeset .grid.cards,
   .md-typeset .grid.cards strong,
   .md-typeset .grid.cards a,
+  .md-typeset .legal-notice .privacy-control,
+  .md-typeset .legal-notice .privacy-control::after,
+  .md-typeset .legal-notice a.legal-mail::after,
   .md-typeset .grid.cards .twemoji,
   .md-typeset .grid.cards .twemoji svg {
     color: #111a32 !important;

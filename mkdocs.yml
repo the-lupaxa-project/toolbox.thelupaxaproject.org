@@ -7,6 +7,8 @@ extra:
   generator: false
   # Wide screens list categories in the header. Smaller screens use the menu.
   hide_primary_sidebar: true
+  # Category tools live in the header menus. No right-hand sidebar.
+  hide_secondary_sidebar: true
   # Viewer language picker (client-side translation; English URLs).
   language_picker: true
   footer_name: The Lupaxa Project
@@ -16,6 +18,8 @@ extra:
   # Counter.dev analytics (omit counter_dev_id to disable).
   counter_dev_id: ef410665-76d4-43fe-9e91-53f26ed1004b
   counter_dev_utcoffset: 0
+  # Cloudflare Web Analytics (omit cloudflare_analytics_token to disable).
+  cloudflare_analytics_token: 31ef33d8c80445529678df8599814943
   social_image: assets/images/brand/social-media-card.png
   social_image_width: 1200
   social_image_height: 630
@@ -27,6 +31,10 @@ extra:
 docs_dir: mkdocs
 site_dir: site
 use_directory_urls: true
+
+# Footer links these pages. They stay out of the header.
+not_in_nav: |
+  /legal/*.md
 
 watch:
   - data
@@ -112,6 +120,7 @@ extra_css:
   - assets/stylesheets/40-components/tables.css
   - assets/stylesheets/40-components/footer.css
   - assets/stylesheets/40-components/tool.css
+  - assets/stylesheets/50-pages/privacy.css
   - assets/stylesheets/50-pages/sponsor.css
   - assets/stylesheets/90-responsive.css
   - assets/stylesheets/95-print.css
@@ -159,3 +168,5 @@ extra_javascript:
   - assets/javascript/tools/timestamp-converter.js
   - assets/javascript/tools/semver-calculator.js
   - assets/javascript/toolbox.js
+  - assets/javascript/sponsor.js
+  - assets/javascript/counter-choice.js
