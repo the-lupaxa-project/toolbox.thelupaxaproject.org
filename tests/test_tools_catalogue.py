@@ -60,232 +60,111 @@ def test_actions_and_summaries() -> None:
         assert tool.summary.count(".") >= 2
         assert len(tool.summary) >= 120
         if tool.id == "jwt-decoder":
-            assert tuple((action.id, action.label) for action in tool.actions) == (
-                ("decode", "Decode"),
-            )
+            assert tuple((action.id, action.label) for action in tool.actions) == (("decode", "Decode"),)
         elif tool.id == "hash-generator":
-            assert tuple((action.id, action.label) for action in tool.actions) == (
-                ("sha-256", "SHA-256"),
-                ("sha-384", "SHA-384"),
-                ("sha-512", "SHA-512"),
-            )
+            assert tuple((action.id, action.label) for action in tool.actions) == (("sha-256", "SHA-256"), ("sha-384", "SHA-384"), ("sha-512", "SHA-512"))
         elif tool.id == "certificate-generator":
-            assert tuple((action.id, action.label) for action in tool.actions) == (
-                ("generate", "Generate"),
-            )
-            assert tuple(field.id for field in tool.fields) == (
-                "common-name",
-                "validity-days",
-                "key-type",
-            )
+            assert tuple((action.id, action.label) for action in tool.actions) == (("generate", "Generate"),)
+            assert tuple(field.id for field in tool.fields) == ("common-name", "validity-days", "key-type")
             validity = next(field for field in tool.fields if field.id == "validity-days")
             assert validity.default == "365"
             assert validity.kind == "number"
             key_type = next(field for field in tool.fields if field.id == "key-type")
             assert key_type.default == "rsa-2048"
-            assert tuple(choice.id for choice in key_type.choices) == (
-                "rsa-2048",
-                "rsa-3072",
-                "rsa-4096",
-                "ecdsa-p256",
-                "ecdsa-p384",
-            )
-            assert tuple(output.id for output in tool.outputs) == (
-                "csr",
-                "certificate",
-                "private-key",
-            )
+            assert tuple(choice.id for choice in key_type.choices) == ("rsa-2048", "rsa-3072", "rsa-4096", "ecdsa-p256", "ecdsa-p384")
+            assert tuple(output.id for output in tool.outputs) == ("csr", "certificate", "private-key")
         elif tool.id == "csr-generator":
-            assert tuple((action.id, action.label) for action in tool.actions) == (
-                ("generate", "Generate"),
-            )
-            assert tuple(field.id for field in tool.fields) == (
-                "common-name",
-                "key-type",
-            )
+            assert tuple((action.id, action.label) for action in tool.actions) == (("generate", "Generate"),)
+            assert tuple(field.id for field in tool.fields) == ("common-name", "key-type")
             key_type = next(field for field in tool.fields if field.id == "key-type")
             assert key_type.default == "rsa-2048"
-            assert tuple(choice.id for choice in key_type.choices) == (
-                "rsa-2048",
-                "rsa-3072",
-                "rsa-4096",
-                "ecdsa-p256",
-                "ecdsa-p384",
-            )
-            assert tuple(output.id for output in tool.outputs) == (
-                "csr",
-                "private-key",
-            )
+            assert tuple(choice.id for choice in key_type.choices) == ("rsa-2048", "rsa-3072", "rsa-4096", "ecdsa-p256", "ecdsa-p384")
+            assert tuple(output.id for output in tool.outputs) == ("csr", "private-key")
         elif tool.id == "certificate-inspector":
-            assert tuple((action.id, action.label) for action in tool.actions) == (
-                ("inspect", "Inspect"),
-            )
+            assert tuple((action.id, action.label) for action in tool.actions) == (("inspect", "Inspect"),)
             assert tool.fields == ()
         elif tool.id == "pem-der-converter":
-            assert tuple((action.id, action.label) for action in tool.actions) == (
-                ("to-der", "To DER"),
-                ("to-pem", "To PEM"),
-            )
+            assert tuple((action.id, action.label) for action in tool.actions) == (("to-der", "To DER"), ("to-pem", "To PEM"))
             assert tool.fields == ()
         elif tool.id == "dns-lookup":
-            assert tuple((action.id, action.label) for action in tool.actions) == (
-                ("look-up", "Look Up"),
-            )
+            assert tuple((action.id, action.label) for action in tool.actions) == (("look-up", "Look Up"),)
             assert tuple(field.id for field in tool.fields) == ("name", "resolver", "record-type")
             resolver = next(field for field in tool.fields if field.id == "resolver")
             assert resolver.default == "cloudflare"
-            assert tuple(choice.id for choice in resolver.choices) == (
-                "cloudflare",
-                "google",
-                "quad9",
-            )
+            assert tuple(choice.id for choice in resolver.choices) == ("cloudflare", "google", "quad9")
             record_type = next(field for field in tool.fields if field.id == "record-type")
             assert record_type.default == "a"
-            assert tuple(choice.id for choice in record_type.choices) == (
-                "a",
-                "aaaa",
-                "cname",
-                "mx",
-                "ns",
-                "txt",
-                "soa",
-                "caa",
-                "srv",
-            )
+            assert tuple(choice.id for choice in record_type.choices) == ("a", "aaaa", "cname", "mx", "ns", "txt", "soa", "caa", "srv")
             assert tuple(output.id for output in tool.outputs) == ("result",)
         elif tool.id == "reverse-dns":
-            assert tuple((action.id, action.label) for action in tool.actions) == (
-                ("look-up", "Look Up"),
-            )
+            assert tuple((action.id, action.label) for action in tool.actions) == (("look-up", "Look Up"),)
             assert tuple(field.id for field in tool.fields) == ("name", "resolver")
             name = next(field for field in tool.fields if field.id == "name")
             assert name.label == "Address"
             resolver = next(field for field in tool.fields if field.id == "resolver")
             assert resolver.default == "cloudflare"
-            assert tuple(choice.id for choice in resolver.choices) == (
-                "cloudflare",
-                "google",
-                "quad9",
-            )
+            assert tuple(choice.id for choice in resolver.choices) == ("cloudflare", "google", "quad9")
             assert tuple(output.id for output in tool.outputs) == ("result",)
-        elif (
-            tool.id == "mx-lookup"
-            or tool.id == "spf-inspector"
-            or tool.id == "dmarc-inspector"
-            or tool.id == "dnssec-inspector"
-        ):
-            assert tuple((action.id, action.label) for action in tool.actions) == (
-                ("look-up", "Look Up"),
-            )
+        elif tool.id == "mx-lookup" or tool.id == "spf-inspector" or tool.id == "dmarc-inspector" or tool.id == "dnssec-inspector":
+            assert tuple((action.id, action.label) for action in tool.actions) == (("look-up", "Look Up"),)
             assert tuple(field.id for field in tool.fields) == ("name", "resolver")
             resolver = next(field for field in tool.fields if field.id == "resolver")
             assert resolver.default == "cloudflare"
-            assert tuple(choice.id for choice in resolver.choices) == (
-                "cloudflare",
-                "google",
-                "quad9",
-            )
+            assert tuple(choice.id for choice in resolver.choices) == ("cloudflare", "google", "quad9")
             assert tuple(output.id for output in tool.outputs) == ("result",)
         elif tool.id in {
             "actions-yaml-validator",
             "dependabot-validator",
             "workflow-inspector",
         }:
-            assert tuple((action.id, action.label) for action in tool.actions) == (
-                ("check", "Check"),
-            )
+            assert tuple((action.id, action.label) for action in tool.actions) == (("check", "Check"),)
             assert tool.fields == ()
             assert tool.outputs == ()
         elif tool.id in {"json-formatter", "yaml-formatter", "xml-formatter"}:
-            assert tuple((action.id, action.label) for action in tool.actions) == (
-                ("format", "Format"),
-                ("minify", "Minify"),
-            )
+            assert tuple((action.id, action.label) for action in tool.actions) == (("format", "Format"), ("minify", "Minify"))
             assert tool.fields == ()
             assert tool.outputs == ()
         elif tool.id == "json-yaml":
-            assert tuple((action.id, action.label) for action in tool.actions) == (
-                ("to-yaml", "To YAML"),
-                ("to-json", "To JSON"),
-            )
+            assert tuple((action.id, action.label) for action in tool.actions) == (("to-yaml", "To YAML"), ("to-json", "To JSON"))
             assert tool.fields == ()
             assert tool.outputs == ()
         elif tool.id == "csv-json":
-            assert tuple((action.id, action.label) for action in tool.actions) == (
-                ("to-json", "To JSON"),
-                ("to-csv", "To CSV"),
-            )
+            assert tuple((action.id, action.label) for action in tool.actions) == (("to-json", "To JSON"), ("to-csv", "To CSV"))
             assert tool.fields == ()
             assert tool.outputs == ()
         elif tool.id == "csv-yaml":
-            assert tuple((action.id, action.label) for action in tool.actions) == (
-                ("to-yaml", "To YAML"),
-                ("to-csv", "To CSV"),
-            )
+            assert tuple((action.id, action.label) for action in tool.actions) == (("to-yaml", "To YAML"), ("to-csv", "To CSV"))
             assert tool.fields == ()
             assert tool.outputs == ()
         elif tool.id == "uuid-generator":
-            assert tuple((action.id, action.label) for action in tool.actions) == (
-                ("generate", "Generate"),
-            )
-            assert tuple((field.id, field.kind, field.default) for field in tool.fields) == (
-                ("version", "choice", "4"),
-                ("count", "number", "1"),
-            )
+            assert tuple((action.id, action.label) for action in tool.actions) == (("generate", "Generate"),)
+            assert tuple((field.id, field.kind, field.default) for field in tool.fields) == (("version", "choice", "4"), ("count", "number", "1"))
             count = tool.fields[1]
             assert count.min == "1"
             assert count.max == "20"
             assert tuple(choice.id for choice in tool.fields[0].choices) == ("4", "7")
             assert tuple(output.id for output in tool.outputs) == ("result",)
         elif tool.id == "cron-parser":
-            assert tuple((action.id, action.label) for action in tool.actions) == (
-                ("explain", "Explain"),
-            )
+            assert tuple((action.id, action.label) for action in tool.actions) == (("explain", "Explain"),)
             assert tool.fields == ()
             assert tool.outputs == ()
         elif tool.id == "regex-tester":
-            assert tuple((action.id, action.label) for action in tool.actions) == (
-                ("test", "Test"),
-            )
-            assert tuple((field.id, field.kind) for field in tool.fields) == (
-                ("pattern", "text"),
-                ("sample", "text"),
-            )
+            assert tuple((action.id, action.label) for action in tool.actions) == (("test", "Test"),)
+            assert tuple((field.id, field.kind) for field in tool.fields) == (("pattern", "text"), ("sample", "text"))
             assert tuple(output.id for output in tool.outputs) == ("result",)
         elif tool.id == "timestamp-converter":
-            assert tuple((action.id, action.label) for action in tool.actions) == (
-                ("to-date", "To Date"),
-                ("to-timestamp", "To Timestamp"),
-            )
+            assert tuple((action.id, action.label) for action in tool.actions) == (("to-date", "To Date"), ("to-timestamp", "To Timestamp"))
             assert tool.fields == ()
             assert tool.outputs == ()
         elif tool.id == "semver-calculator":
-            assert tuple((action.id, action.label) for action in tool.actions) == (
-                ("compare", "Compare"),
-                ("step", "Step"),
-            )
-            assert tuple(choice.id for choice in tool.fields[2].choices) == (
-                "major",
-                "minor",
-                "patch",
-            )
+            assert tuple((action.id, action.label) for action in tool.actions) == (("compare", "Compare"), ("step", "Step"))
+            assert tuple(choice.id for choice in tool.fields[2].choices) == ("major", "minor", "patch")
             assert tool.fields[2].default == "patch"
             assert tuple(output.id for output in tool.outputs) == ("result",)
         elif tool.id == "base-n":
-            assert tuple((action.id, action.label) for action in tool.actions) == (
-                ("encode", "Encode"),
-                ("decode", "Decode"),
-            )
-            assert tuple((field.id, field.kind, field.default) for field in tool.fields) == (
-                ("base", "choice", "64"),
-            )
-            assert tuple(choice.id for choice in tool.fields[0].choices) == (
-                "16",
-                "32",
-                "58",
-                "64",
-                "85",
-            )
+            assert tuple((action.id, action.label) for action in tool.actions) == (("encode", "Encode"), ("decode", "Decode"))
+            assert tuple((field.id, field.kind, field.default) for field in tool.fields) == (("base", "choice", "64"),)
+            assert tuple(choice.id for choice in tool.fields[0].choices) == ("16", "32", "58", "64", "85")
             assert tool.outputs == ()
         elif tool.status == "planned":
             assert tool.actions == ()

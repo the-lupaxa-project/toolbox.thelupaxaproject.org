@@ -72,43 +72,22 @@ def load_catalogue(path: Path) -> tuple[Tool, ...]:
     seen_tool_ids: set[str] = set()
     for index, category in enumerate(categories):
         category_map = _mapping(category, f"categories[{index}]")
-        category_id = _identifier(
-            _required_text(category_map, "id", f"categories[{index}]"),
-            f"categories[{index}]",
-        )
+        category_id = _identifier(_required_text(category_map, "id", f"categories[{index}]"), f"categories[{index}]")
         if category_id in seen_category_ids:
             raise CatalogueError(f"duplicate category id {category_id!r}")
         seen_category_ids.add(category_id)
         category_title = _required_text(category_map, "title", f"category {category_id}")
-        category_description = _required_text(
-            category_map, "description", f"category {category_id}"
-        )
+        category_description = _required_text(category_map, "description", f"category {category_id}")
         raw_tools = category_map.get("tools")
         if not isinstance(raw_tools, list):
             raise CatalogueError(f"category {category_id} tools must be a list")
         for tool_index, raw_tool in enumerate(raw_tools):
             where = f"category {category_id} tools[{tool_index}]"
-            tools.append(
-                _tool(
-                    raw_tool,
-                    where,
-                    category_id,
-                    category_title,
-                    category_description,
-                    seen_tool_ids,
-                )
-            )
+            tools.append(_tool(raw_tool, where, category_id, category_title, category_description, seen_tool_ids))
     return tuple(tools)
 
 
-def _tool(
-    raw_tool: Any,
-    where: str,
-    category_id: str,
-    category_title: str,
-    category_description: str,
-    seen_tool_ids: set[str],
-) -> Tool:
+def _tool(raw_tool: Any, where: str, category_id: str, category_title: str, category_description: str, seen_tool_ids: set[str]) -> Tool:
     tool_map = _mapping(raw_tool, where)
     tool_id = _identifier(_required_text(tool_map, "id", where), where)
     if tool_id in seen_tool_ids:
@@ -145,12 +124,7 @@ def _actions(tool_map: dict[str, Any], tool_id: str, status: str) -> tuple[Actio
     for index, raw_action in enumerate(raw_actions):
         where = f"tool {tool_id} actions[{index}]"
         action_map = _mapping(raw_action, where)
-        actions.append(
-            Action(
-                id=_identifier(_required_text(action_map, "id", where), where),
-                label=_required_text(action_map, "label", where),
-            )
-        )
+        actions.append(Action(id=_identifier(_required_text(action_map, "id", where), where), label=_required_text(action_map, "label", where)))
     return tuple(actions)
 
 
@@ -183,15 +157,7 @@ def _fields(tool_map: dict[str, Any], tool_id: str, status: str) -> tuple[Field,
             for choice_index, raw_choice in enumerate(raw_choices):
                 choice_where = f"{where} choices[{choice_index}]"
                 choice_map = _mapping(raw_choice, choice_where)
-                parsed_choices.append(
-                    Choice(
-                        id=_identifier(
-                            _required_text(choice_map, "id", choice_where),
-                            choice_where,
-                        ),
-                        label=_required_text(choice_map, "label", choice_where),
-                    )
-                )
+                parsed_choices.append(Choice(id=_identifier(_required_text(choice_map, "id", choice_where), choice_where), label=_required_text(choice_map, "label", choice_where)))
             choices = tuple(parsed_choices)
             if default not in {choice.id for choice in choices}:
                 raise CatalogueError(f"{where} default must match a choice id")
@@ -220,9 +186,7 @@ def _fields(tool_map: dict[str, Any], tool_id: str, status: str) -> tuple[Field,
     return tuple(fields)
 
 
-def _outputs(
-    tool_map: dict[str, Any], tool_id: str, status: str, fields: tuple[Field, ...]
-) -> tuple[Output, ...]:
+def _outputs(tool_map: dict[str, Any], tool_id: str, status: str, fields: tuple[Field, ...]) -> tuple[Output, ...]:
     if status == "planned":
         return ()
     if not fields:
@@ -238,12 +202,7 @@ def _outputs(
     for index, raw_output in enumerate(raw_outputs):
         where = f"tool {tool_id} outputs[{index}]"
         output_map = _mapping(raw_output, where)
-        outputs.append(
-            Output(
-                id=_identifier(_required_text(output_map, "id", where), where),
-                label=_required_text(output_map, "label", where),
-            )
-        )
+        outputs.append(Output(id=_identifier(_required_text(output_map, "id", where), where), label=_required_text(output_map, "label", where)))
     return tuple(outputs)
 
 
@@ -305,18 +264,10 @@ def _paste_widget(tool: Tool) -> str:
         for choice in field.choices:
             choice_id = html.escape(choice.id, quote=True)
             selected = " selected" if choice.id == field.default else ""
-            lines.append(
-                f'<option value="{choice_id}"{selected}>'
-                f"{html.escape(choice.label, quote=True)}</option>"
-            )
+            lines.append(f'<option value="{choice_id}"{selected}>{html.escape(choice.label, quote=True)}</option>')
         lines.append("</select>")
         lines.append("</label>")
-    lines.extend(
-        "<button "
-        f'type="button" data-action="{html.escape(action.id, quote=True)}">'
-        f"{html.escape(action.label, quote=True)}</button>"
-        for action in tool.actions
-    )
+    lines.extend(f'<button type="button" data-action="{html.escape(action.id, quote=True)}">{html.escape(action.label, quote=True)}</button>' for action in tool.actions)
     lines.append("</div>")
     lines.extend(
         [
@@ -340,10 +291,7 @@ def _form_widget(tool: Tool) -> str:
             ]
         )
         if field.kind == "text":
-            lines.append(
-                '<input class="tool-field__control" type="text" '
-                f'data-field="{field_id}" autocomplete="off">'
-            )
+            lines.append(f'<input class="tool-field__control" type="text" data-field="{field_id}" autocomplete="off">')
         elif field.kind == "number":
             lines.append(
                 '<input class="tool-field__control" type="number" '
@@ -357,19 +305,11 @@ def _form_widget(tool: Tool) -> str:
             for choice in field.choices:
                 choice_id = html.escape(choice.id, quote=True)
                 selected = " selected" if choice.id == field.default else ""
-                lines.append(
-                    f'<option value="{choice_id}"{selected}>'
-                    f"{html.escape(choice.label, quote=True)}</option>"
-                )
+                lines.append(f'<option value="{choice_id}"{selected}>{html.escape(choice.label, quote=True)}</option>')
             lines.append("</select>")
         lines.append("</label>")
     lines.append('<div class="tool-actions">')
-    lines.extend(
-        "<button "
-        f'type="button" data-action="{html.escape(action.id, quote=True)}">'
-        f"{html.escape(action.label, quote=True)}</button>"
-        for action in tool.actions
-    )
+    lines.extend(f'<button type="button" data-action="{html.escape(action.id, quote=True)}">{html.escape(action.label, quote=True)}</button>' for action in tool.actions)
     lines.append("</div>")
     for output in tool.outputs:
         output_id = html.escape(output.id, quote=True)
@@ -378,11 +318,9 @@ def _form_widget(tool: Tool) -> str:
             [
                 '<label class="tool-field">',
                 f'<span class="tool-field__label">{output_label}</span>',
-                f'<textarea class="tool-output" data-output="{output_id}" '
-                f'aria-label="{output_label}" readonly></textarea>',
+                f'<textarea class="tool-output" data-output="{output_id}" aria-label="{output_label}" readonly></textarea>',
                 "</label>",
-                '<button type="button" class="tool-copy" '
-                f'data-copy="{output_id}" disabled>Copy</button>',
+                f'<button type="button" class="tool-copy" data-copy="{output_id}" disabled>Copy</button>',
             ]
         )
     lines.extend(['<p class="tool-error" role="alert"></p>', "</div>"])
@@ -404,9 +342,7 @@ def render_home(tools: tuple[Tool, ...]) -> str:
         '        alt="The Lupaxa Project Logo"',
         '        translate="no"/>',
         '    <h1 class="lupaxa-hero-title" translate="no">Lupaxa Web Toolbox</h1>',
-        '    <p class="lupaxa-hero-subtitle">'
-        + "Browser tools for encoding, cryptography, DNS, data, development, and GitHub."
-        + "</p>",
+        '    <p class="lupaxa-hero-subtitle">' + "Browser tools for encoding, cryptography, DNS, data, development, and GitHub." + "</p>",
         "</div>",
         "",
         "## In Your Browser",
@@ -430,15 +366,7 @@ def render_home(tools: tuple[Tool, ...]) -> str:
     ]
     for category_id, category_title, category_tools in _categories(tools):
         href = f"{category_id}/index.md"
-        parts.extend(
-            _card(
-                category_title,
-                href,
-                _tool_list(category_tools),
-                rule=False,
-                icon=_CATEGORY_ICONS[category_id],
-            )
-        )
+        parts.extend(_card(category_title, href, _tool_list(category_tools), rule=False, icon=_CATEGORY_ICONS[category_id]))
     parts.append("</div>")
     parts.append("")
     return "\n".join(parts).rstrip() + "\n"
@@ -463,15 +391,7 @@ def render_category_page(category_title: str, category_tools: list[Tool]) -> str
         "",
     ]
     for tool in category_tools:
-        parts.extend(
-            _card(
-                tool.title,
-                f"{tool.id}.md",
-                tool.summary,
-                rule=False,
-                icon=_TOOL_ICONS[tool.id],
-            )
-        )
+        parts.extend(_card(tool.title, f"{tool.id}.md", tool.summary, rule=False, icon=_TOOL_ICONS[tool.id]))
     parts.extend(["</div>", "", "</div>", ""])
     return "\n".join(parts).rstrip() + "\n"
 
@@ -520,14 +440,7 @@ _TOOL_ICONS = {
 }
 
 
-def _card(
-    title: str,
-    href: str,
-    summary: str,
-    *,
-    rule: bool = True,
-    icon: str | None = None,
-) -> list[str]:
+def _card(title: str, href: str, summary: str, *, rule: bool = True, icon: str | None = None) -> list[str]:
     label = f"**[{title}]({href})**"
     if icon:
         label = f":{icon}:{{ .lg .middle }} {label}"
@@ -604,10 +517,7 @@ def _categories(tools: tuple[Tool, ...]) -> list[tuple[str, str, list[Tool]]]:
             grouped.append((tool.category_id, tool.category_title, [tool]))
         else:
             grouped[slot][2].append(tool)
-    return [
-        (category_id, category_title, _by_title(category_tools))
-        for category_id, category_title, category_tools in grouped
-    ]
+    return [(category_id, category_title, _by_title(category_tools)) for category_id, category_title, category_tools in grouped]
 
 
 def _by_title(category_tools: list[Tool]) -> list[Tool]:

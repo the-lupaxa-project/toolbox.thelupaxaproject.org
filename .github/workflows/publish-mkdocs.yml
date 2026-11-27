@@ -6,12 +6,12 @@ on:
       - master
     paths:
       - ".github/workflows/publish-mkdocs.yml"
-      - "data/**"
-      - "src/**"
       - "mkdocs/**"
       - "mkdocs.yml"
       - "overrides/**"
       - "requirements.txt"
+      - "data/**"
+      - "src/**"
       - "hooks/**"
 
   # UTC. 02:18 UTC is about 02:18 GMT / 03:18 BST so banners expire overnight.
@@ -37,7 +37,6 @@ jobs:
     uses: the-lupaxa-project/workflows/.github/workflows/reusable-mkdocs-site-publisher.yml@master
     secrets: inherit
     with:
-      python-version: "3.13"
       cleanup: true
 
   generate-workflow-summary:

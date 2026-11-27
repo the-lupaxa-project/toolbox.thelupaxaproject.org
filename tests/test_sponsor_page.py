@@ -18,9 +18,7 @@ def test_sponsor_page_states_time_then_costs_and_embeds_kofi():
     assert time_at < costs_at < ai_at
     assert "\n# Sponsor\n" not in SPONSOR_MD
     assert "\n    ---\n" not in SPONSOR_MD
-    assert (
-        'data-src="https://ko-fi.com/thelupaxaproject/?hidefeed=true&widget=true&embed=true"'
-    ) in SPONSOR_MD
+    assert ('data-src="https://ko-fi.com/thelupaxaproject/?hidefeed=true&widget=true&embed=true"') in SPONSOR_MD
     assert ' src="' not in SPONSOR_MD
     assert "sponsor-widget-open" in SPONSOR_MD
     assert "Open Ko-fi Widget" in SPONSOR_MD

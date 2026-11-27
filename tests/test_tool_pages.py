@@ -6,16 +6,7 @@ from pathlib import Path
 
 import pytest
 
-from tools_lib import (
-    _TOOL_ICONS,
-    CatalogueError,
-    build_nav,
-    load_catalogue,
-    render_category_page,
-    render_home,
-    render_tool_page,
-    write_generated_pages,
-)
+from tools_lib import _TOOL_ICONS, CatalogueError, build_nav, load_catalogue, render_category_page, render_home, render_tool_page, write_generated_pages
 
 ROOT = Path(__file__).resolve().parents[1]
 CATALOGUE = ROOT / "data" / "tools.yml"
@@ -221,10 +212,7 @@ def test_render_home_links_to_six_category_pages() -> None:
     assert "<hr>" not in page
     assert "In Your Browser" in page
     assert "Nothing you paste into those tools is uploaded or stored on a server" in page
-    assert (
-        "A DNS lookup sends the name or address to the resolver you pick "
-        "(Cloudflare, Google, or Quad9). This site does not store that query." in page
-    )
+    assert "A DNS lookup sends the name or address to the resolver you pick (Cloudflare, Google, or Quad9). This site does not store that query." in page
     assert "keys, tokens, and other private material remain under your control." in page
     assert "lupaxa-landing-grid" in page
     assert "---" not in page[grid:]
@@ -254,10 +242,7 @@ def test_category_pages_describe_the_tools_on_offer() -> None:
         assert description in page
         assert page.index(description) < page.index('<div class="grid cards"')
         if category_id == "dns":
-            assert (
-                "Each lookup is sent to the resolver you pick: Cloudflare, "
-                "Google, or Quad9. This site does not store the query." in page
-            )
+            assert "Each lookup is sent to the resolver you pick: Cloudflare, Google, or Quad9. This site does not store the query." in page
         if category_id == "github":
             assert "A pasted file stays on this machine." in page
         if category_id == "data":
@@ -346,18 +331,10 @@ def test_write_generated_pages_skips_unchanged_files(tmp_path: Path) -> None:
 
 
 def test_strict_build_contains_widget_and_planned_sentence() -> None:
-    completed = subprocess.run(
-        [sys.executable, "-m", "mkdocs", "build", "--strict"],
-        cwd=ROOT,
-        check=False,
-        capture_output=True,
-        text=True,
-    )
+    completed = subprocess.run([sys.executable, "-m", "mkdocs", "build", "--strict"], cwd=ROOT, check=False, capture_output=True, text=True)
     assert completed.returncode == 0, completed.stdout + completed.stderr
 
-    tool_css = (ROOT / "site" / "assets" / "stylesheets" / "40-components" / "tool.css").read_text(
-        encoding="utf-8"
-    )
+    tool_css = (ROOT / "site" / "assets" / "stylesheets" / "40-components" / "tool.css").read_text(encoding="utf-8")
     assert ".tool-actions button:hover" in tool_css
     assert ".tool-copy:hover" in tool_css
     assert "cursor: pointer" in tool_css
@@ -406,15 +383,11 @@ def test_strict_build_contains_widget_and_planned_sentence() -> None:
     assert 'data-field="common-name"' in certificate_html
     assert 'data-output="private-key"' in certificate_html
     assert 'data-output="csr"' in certificate_html
-    assert certificate_html.index('data-output="csr"') < certificate_html.index(
-        'data-output="certificate"'
-    )
+    assert certificate_html.index('data-output="csr"') < certificate_html.index('data-output="certificate"')
     assert 'value="rsa-3072"' in certificate_html
     assert 'value="rsa-4096"' in certificate_html
     assert 'value="ecdsa-p384"' in certificate_html
-    csr_page = (ROOT / "site" / "cryptography" / "csr-generator" / "index.html").read_text(
-        encoding="utf-8"
-    )
+    csr_page = (ROOT / "site" / "cryptography" / "csr-generator" / "index.html").read_text(encoding="utf-8")
     assert 'value="rsa-4096"' in csr_page
     assert "validity-days" not in csr_page
 
@@ -466,13 +439,7 @@ def test_strict_build_contains_widget_and_planned_sentence() -> None:
 
 
 def test_built_encoding_page_loads_scripts() -> None:
-    completed = subprocess.run(
-        [sys.executable, "-m", "mkdocs", "build", "--strict"],
-        cwd=ROOT,
-        check=False,
-        capture_output=True,
-        text=True,
-    )
+    completed = subprocess.run([sys.executable, "-m", "mkdocs", "build", "--strict"], cwd=ROOT, check=False, capture_output=True, text=True)
     assert completed.returncode == 0, completed.stdout + completed.stderr
 
     base_n_page = (ROOT / "site" / "encoding" / "base-n" / "index.html").read_text(encoding="utf-8")
